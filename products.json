@@ -1,0 +1,23 @@
+[
+	{
+		"id": 1,
+		"name": "Mariano",
+		"age": 19,
+		"country": "Argentina"
+	},
+	{
+		"title": "Milk",
+		"description": "good Drink",
+		"price": 10,
+		"thumbnail": "Serenisima",
+		"stock": 50,
+		"id": 2,
+		"code": "FFK"
+	},
+	{
+		"id": 3,
+		"name": "Lucas",
+		"age": 30,
+		"country": "Italia"
+	}
+]
