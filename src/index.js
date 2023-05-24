@@ -6,16 +6,18 @@ export default class ProductManager {
         this.path = 'products.json';
     }
     //////////////////////////////// ADDPRODUCT
-    addProduct = async (title, description, price, thumbnail, code, stock) => {
+    addProduct = async (title, description, code, price, status = true, stock, category, thumbnails) => {
         const products = await this.getProducts() //traemos los products del json luego de hacer el readFile, en caso de que haya
 
-        if(title, description, price, thumbnail, code, stock) {
+        if(title, description, code, price, status, stock, category) {
             const newProduct = {
                 title,
                 description,
                 price,
-                thumbnail,
-                stock
+                status,
+                stock,
+                category,
+                thumbnails
             }
             products.length === 0 ? newProduct.id = 1 : newProduct.id = products[products.length - 1].id + 1; //se crea el id de manera autoincramental
             
@@ -30,10 +32,9 @@ export default class ProductManager {
                 products.push(newProduct)
                 await fs.promises.writeFile(this.path, JSON.stringify(products, null, '\t'))
             }
-
-            console.log(products)
+            return true
         } else {
-            return 'You need to fill all fields for this product!'
+            return false
         }
     }
     //////////////////////////////// GETPRODUCTS
@@ -69,8 +70,5 @@ export default class ProductManager {
 }
 
 
-/* const manager = new ProductManager();
-manager.addProduct('Milk', 'good Drink', 5, 'Serenisima', 'FFK', 50)
-manager.updateProduct(2, {price: 10}) */
 
 

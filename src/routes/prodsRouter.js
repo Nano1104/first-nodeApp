@@ -1,0 +1,53 @@
+import { Router } from "express";
+const router = Router();
+
+import ProductManger from '../index.js'; //traemos la clase constructora del index.js
+const manager = new ProductManger();
+
+//////////////////////////////// GET PRODUCTS
+router.get('/', async (req, res) => {
+    const { limit } = req.query
+    if(limit === '') {     
+        res.json(await manager.getProducts())   //En caso de que no se espicique el limit en la URL, devuelve el array completo
+    } else {               
+        const prods = await manager.getProducts()   //Devuelve la cantidad especificada en la URL
+        res.json(prods.slice(0, limit))
+    }
+})
+
+//////////////////////////////// GET BY ID
+router.get('/:pid', async (req, res) => {
+    const product = await manager.getProductById(Number(req.params.pid))
+    res.json(product);
+})
+
+//////////////////////////////// ADD PRODUCT
+router.post('/', async (req, res) => {
+    const prod = req.body
+    const { title, description, code, price, status, stock, category, thumbnails } = prod
+
+    if(await manager.addProduct(title, description, code, price, status, stock, category, thumbnails)) {    //si se completaron los campos se agregara de manera correcta 
+        res.send({status: 200, "message": "Product added successfully"})                        //de lo contrario tira error 
+    } else {
+        res.send({status: 400, "message": "Error adding product, some fields may be empty"})
+    }
+    
+})
+
+//////////////////////////////// UPDATE PRODUCT
+router.put('/:pid', async (req, res) => {
+    const update = req.body
+    const id = Number(req.params.pid)
+
+    await manager.updateProduct(id, update)
+    res.send({status: 200, "message": "Product updated successfully"})
+})
+
+//////////////////////////////// DELETE PRODUCT
+router.delete('/:pid', async (req, res) => {
+    const id = Number(req.params.pid)
+    await manager.deleteProduct(id)
+    res.send({status: 200, message: "Product deleted successfully"})
+})
+
+export default router;

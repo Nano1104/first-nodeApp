@@ -1,23 +1,26 @@
 [
 	{
-		"id": 1,
-		"name": "Mariano",
-		"age": 19,
-		"country": "Argentina"
-	},
-	{
 		"title": "Milk",
-		"description": "good Drink",
-		"price": 10,
-		"thumbnail": "Serenisima",
-		"stock": 50,
-		"id": 2,
-		"code": "FFK"
+		"description": "Tasty Drink",
+		"price": 50,
+		"status": false,
+		"stock": 100,
+		"category": "DRINK",
+		"id": 3,
+		"code": "JJK"
 	},
 	{
-		"id": 3,
-		"name": "Lucas",
-		"age": 30,
-		"country": "Italia"
+		"title": "Chocolate",
+		"description": "Sweet candy",
+		"price": 50,
+		"status": true,
+		"stock": 100,
+		"category": "CANDY",
+		"thumbnails": [
+			"https://www.google.com/img1",
+			"https://www.google.com/img2"
+		],
+		"id": 4,
+		"code": "FKF"
 	}
 ]
