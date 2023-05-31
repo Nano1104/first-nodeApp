@@ -1,0 +1,16 @@
+<div>
+    {{#if products}}
+        <ul>
+            {{#each products}}
+                <li><strong>{{this.title}}</strong></li>
+                <p>Price: {{this.price}}</p>
+                <p>'{{this.description}}'</p>
+                {{#if this.thumbnails}}
+                    {{this.thumbnails}}
+                {{/if}}
+            {{/each}}
+        </ul>
+        {{else}}
+        <h3>Sorry, the Cart Products it's empty</h3>
+    {{/if}}
+</div>

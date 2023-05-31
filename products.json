@@ -22,5 +22,15 @@
 		],
 		"id": 4,
 		"code": "FKF"
+	},
+	{
+		"title": "Juice",
+		"description": "Fresh Drink",
+		"price": 10,
+		"status": true,
+		"stock": 75,
+		"category": "DRINK",
+		"id": 5,
+		"code": "TTT"
 	}
 ]
