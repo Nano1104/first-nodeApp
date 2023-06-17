@@ -4,7 +4,7 @@ const router = Router();
 
 const path = 'carrito.json';    //ruta al carrito json
 
-import ProductManger from '../index.js';    //traemos la clase constructora del index.js para poder trabajar con los products del json
+import ProductManger from '../prodManager.js';    //traemos la clase constructora del index.js para poder trabajar con los products del json
 const manager = new ProductManger();
 
 
