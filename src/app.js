@@ -1,44 +1,13 @@
 const express = require('express');
+const { Server } = require("socket.io");
 const cors = require('cors');
 const displayRoutes = require('express-routemap'); 
 const handlebars = require('express-handlebars');
 const { NODE_ENV, PORT, API_VERSION } = require('./config/config.js');
+const { mongoDBConnection } = require('./db/mongoConfig');  
 
 
-/* import express from 'express';
-import { Server } from 'socket.io';
-import cors from 'cors';
-import displayRoutes from 'express-routemap';
-import handlebars from 'express-handlebars';
-import __dirname from './utils.js';
-import { NODE_ENV, PORT, API_VERSION } from './config/config.js'; */
-
-/* const app = express();
-const PORT = 8080;
-
-//ROUTES
-import prodsRouter from './routes/prodsRouter.js';
-import cartsRouter from './routes/cartsRouter.js';
-import viewRouter from './routes/viewsRouter.js';
-
-//MIDDLEWARE
-app.use(express.json());
-app.use(express.urlencoded({ extended: true})) //Para soportar las query params
-app.use(express.static(`${__dirname}/public`))
-
-//SETEO HANDLEBARS
-app.engine('handlebars', handlebars.engine());
-app.set('views', `${__dirname}/views`)
-app.set('view engine', 'handlebars');
-
-const products = []     //creamos el array para los productos que se mostraran en tiempo real
-
-app.use('/api/products', prodsRouter)
-app.use('/api/carts', cartsRouter)
-app.use('/', viewRouter)
-
-const server = app.listen(PORT, () => console.log(`App listening on ${PORT}`))
-const io = new Server(server)
+/* const io = new Server(server)
 
 app.set('socketio', io);        //creamos el seteo de una variable global para io con el fin de usarla en el 'prodsRouter'
 
@@ -61,7 +30,7 @@ class App {
         this.app = express();
         this.env = NODE_ENV || "development";
         this.port = PORT || 5000;
-
+        
         this.initMiddlewares();
         this.initRoutes(routes);
         this.connectDB();
@@ -77,7 +46,7 @@ class App {
     }
 
     async connectDB() {
-        ///
+        await mongoDBConnection()
     }
 
     initMiddlewares() {
@@ -90,16 +59,24 @@ class App {
 
     initRoutes(routes) {
         routes.forEach(route => {
-            this.app.use(`/api${API_VERSION}`, route.routes)
+            this.app.use(`/api/${API_VERSION}`, route.router)
         });
     }
 
     listen() {
-        this.app.listen(this.port, () => {
-            displayRoutes(this.app)
-            console.log(`====================`)
-            console.log(`======== ENV: ${this.env} =======`)
-            console.log(`======== App listening on port ${this.port} =======`)
+        const io = new Server(
+            this.app.listen(this.port, () => {
+                displayRoutes(this.app)
+                console.log(`========================================`)
+                console.log(`======== ENV: ${this.env} =======`)
+                console.log(`======== App listening on port ${this.port} =======`)
+            })
+        )
+
+        io.on('connection', data => {
+            console.log('nuevo cliente conectado')
+            console.log(data)
+            io.emit('server-response', 'SERVER OK')
         })
     }
 

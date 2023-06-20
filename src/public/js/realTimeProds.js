@@ -1,4 +1,4 @@
-const socket = io()
+const socket = io();
 
 let prodsContainer = document.getElementById('products')
 
@@ -11,6 +11,8 @@ socket.on('postReq', prods => {         //PARA AGREGAR PRODUCTO EN TIEMPO REAL
         prodsContainer.innerHTML += `<h3>${prod.title}</h3>`
     } 
 })
+
+
 
 socket.on('deleted-prod', prods => {    //PARA ELIMINAR PRODUCTO EN TIEMPO REAL
     prodsContainer.innerHTML = ' '

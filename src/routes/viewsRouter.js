@@ -1,16 +1,31 @@
-import { Router } from "express";
-const router = Router();
+const { Router } = require('express');
 
-import ProductManger from '../prodManager.js'; //traemos la clase constructora del index.js
-const manager = new ProductManger();
+//TRAEMOS EL PRODUCT MANAGER PARA HACER USO DE SUS METODOS
+const ProductsManager = require("../dao/managers/products.manager.js");
 
-router.get('/', async (req, res) => {
-    const products = await manager.getProducts();
-    res.render("home", {products});
-})
+class ViewsRouter {
+    path = "/views";
+    router = Router();
+    manager = new ProductsManager();
 
-router.get('/realtimeproducts', async (req, res) => {
-    res.render("realTimeProducts");
-})
+    constructor() {
+        this.initRoutes();
+    }
 
-export default router
+    initRoutes() {
+        this.router.get(`${this.path}/home`, async (req, res) => {
+            const products = await this.manager.getProducts();
+            res.render("home", {products});
+        })
+
+        this.router.get(`${this.path}/chat`, async (req, res) => {
+            res.render("chat")
+        })
+
+        this.router.get(`${this.path}/realtimeproducts`, async (req, res) => {
+            res.render("realTimeProducts");
+        })
+    }
+}
+
+module.exports = ViewsRouter;
