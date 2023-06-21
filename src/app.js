@@ -6,25 +6,15 @@ const handlebars = require('express-handlebars');
 const { NODE_ENV, PORT, API_VERSION } = require('./config/config.js');
 const { mongoDBConnection } = require('./db/mongoConfig');  
 
-
-/* const io = new Server(server)
-
-app.set('socketio', io);        //creamos el seteo de una variable global para io con el fin de usarla en el 'prodsRouter'
-
-io.on('connection', socket => {
-    
-    socket.on('connection', socket => {
-        console.log('new connection established')
-        io.emit('server-response', 'server-listening')
-    })
-   
-}) */
+//TRAEMOS EL MANAGER DE LOS MENSAJES PARA PODER TRABAJAR CON ELLOS EN EL CHAT
+const MessagesManager = require('./dao/managers/messages.manager.js');
 
 class App {
     app;
     env;
     port;
     server;
+    messManager = new MessagesManager();
 
     constructor(routes) {
         this.app = express();
@@ -53,8 +43,9 @@ class App {
         this.app.use(cors())
         this.app.use(express.json());
         this.app.use(express.urlencoded({ extended: true})) //Para soportar las query params
-        /* this.app.use(express.static(`${__dirname}/public`)) */
-        this.app.use('/static', express.static(`${__dirname}/public`));
+        /* this.app.use(express.static(path.join(`${__dirname}/public`))) */
+        /* this.app.use('/static', express.static(`${__dirname}/public`)); */
+        this.app.use(express.static("public"))
     }
 
     initRoutes(routes) {
@@ -73,10 +64,19 @@ class App {
             })
         )
 
-        io.on('connection', data => {
-            console.log('nuevo cliente conectado')
-            console.log(data)
-            io.emit('server-response', 'SERVER OK')
+        io.on('connection', socket => {
+            console.log('New user connected')
+
+            socket.on('new-user', async user => {          //cuando entra un nuevo user, envia un mensaje al resto menos al actual y renderiza los mensajes de ld db en todos
+                const messages = await this.messManager.getMessages()
+                socket.emit('server-messages', messages)
+                socket.broadcast.emit('server-autentication', user)
+            })
+
+            socket.on('message', async message => {         //envia el mensaje a la base de datos
+                console.log(`User ${message.user} has sent a message`)
+                this.messManager.creatMessage(message)
+            });
         })
     }
 

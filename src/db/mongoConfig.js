@@ -13,9 +13,9 @@ const configConnection = {
 const mongoDBConnection = async () => {
     try {
         await connect(configConnection.url, configConnection.options)
-        console.log(`====================`)
+        console.log(`========================================`)
         console.log(`======== Connected to MongoDB ===========`)
-        console.log(`====================`)
+        console.log(`========================================`)
     } catch(err) {
         console.log("Failed connection to MongoDB", err);
     }

@@ -1,7 +1,11 @@
-<div class="border border-primary d-flex flex-column align-items-center p-5">
-    <textarea name="" id="chatbox" style="resize:none;width:30%;height:150px">
+<div class="d-flex flex-column align-items-center p-5">
+    <textarea id="chatbox" style="resize:none;width:30%;height:150px">
     </textarea>
-    <input type="submit" style="color:orange" id="send">
+    <button id="send" class="btn btn-primary m-2">ENVIAR</button>
 </div>
+<div class="m-5">
+    <p id="messages-container"></p>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script src="/socket.io/socket.io.js"></script>
-<script src="/js/realtTimeChat.js"></script>
+<script src="/js/realTimeChat.js"></script>

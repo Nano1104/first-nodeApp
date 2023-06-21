@@ -2,11 +2,12 @@ const { Router } = require('express');
 
 //TRAEMOS EL PRODUCT MANAGER PARA HACER USO DE SUS METODOS
 const ProductsManager = require("../dao/managers/products.manager.js");
+const MessagesManager = require("../dao/managers/messages.manager.js");
 
 class ViewsRouter {
     path = "/views";
     router = Router();
-    manager = new ProductsManager();
+    prodManager = new ProductsManager();
 
     constructor() {
         this.initRoutes();
@@ -14,7 +15,7 @@ class ViewsRouter {
 
     initRoutes() {
         this.router.get(`${this.path}/home`, async (req, res) => {
-            const products = await this.manager.getProducts();
+            const products = await this.prodManager.getProducts();
             res.render("home", {products});
         })
 
