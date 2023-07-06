@@ -3,7 +3,7 @@ const { Server } = require("socket.io");
 const cors = require('cors');
 const displayRoutes = require('express-routemap'); 
 const handlebars = require('express-handlebars');
-const { NODE_ENV, PORT, API_VERSION } = require('./config/config.js');
+const { NODE_ENV, PORT } = require('./config/config.js');
 const { mongoDBConnection } = require('./db/mongoConfig');  
 
 //TRAEMOS EL MANAGER DE LOS MENSAJES PARA PODER TRABAJAR CON ELLOS EN EL CHAT
@@ -50,7 +50,7 @@ class App {
 
     initRoutes(routes) {
         routes.forEach(route => {
-            this.app.use(`/api/${API_VERSION}`, route.router)
+            this.app.use(`/api`, route.router)
         });
     }
 
@@ -82,7 +82,8 @@ class App {
 
     initHandlebars() {
         this.app.engine('handlebars', handlebars.engine());
-        this.app.set('views', `${__dirname}/views`)
+        /* this.app.set('views', `${__dirname}/views`) */
+        this.app.set('views', __dirname + '/views');
         this.app.set('view engine', 'handlebars');
     }
 

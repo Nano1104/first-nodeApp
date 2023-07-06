@@ -33,9 +33,9 @@ class CartsRouter {
             //GET CARTS MONGO
             try {
                 let carts = await this.manager.getCarts()
-                res.send({status: 200, message: "successfully requeste", carts})
+                res.send({status: 200, message: "successfully request", carts})
             } catch(err) {
-                res.send({status: 400, message: "error getting cars", err})
+                res.send({status: 400, message: "error getting carts", err})
             }
 
             //GET CARTS Filesystem
@@ -53,9 +53,9 @@ class CartsRouter {
             }
 
             //GET CART PRODUCTS Filesystem
-            const carts = await getCarts()
+            /* const carts = await getCarts()
             const cartFound = carts.find(cart => cart.id === Number(req.params.cid))
-            return cartFound.products
+            return cartFound.products */
         })
 
         //////////////////////////////// POST CART
@@ -69,12 +69,12 @@ class CartsRouter {
             }
 
             //POST CART Filesystem
-            const carts = await getCarts();
+            /* const carts = await getCarts();
             const newCart = { products: [] }
             carts.length === 0 ? newCart.id = 1 : newCart.id = carts[carts.length - 1].id + 1; //se crea el id de manera autoincramental
 
             carts.push(newCart);
-            await fs.promises.writeFile(this.JSONpath, JSON.stringify(carts, null, '\t'))
+            await fs.promises.writeFile(this.JSONpath, JSON.stringify(carts, null, '\t')) */
         })
 
         //////////////////////////////// POST PRODUCT IN CERTAIN CART
@@ -92,7 +92,7 @@ class CartsRouter {
             }
 
             /************************************  POST PRODUCT IN CART Filesystem  ***************************** */
-            const carts = await getCarts()
+            /* const carts = await getCarts()
             const prods = await this.prodManager.getProducts()
 
             const cartFound = carts.find(cart => cart.id === Number(cartId))
@@ -117,8 +117,59 @@ class CartsRouter {
 
             } else {                                    //en caso de que no exista el product con el id pasado por param en el products.json se enviara el siguiente mensaje
                 res.send({status: 400, message: "Does not exist product with that Id"})
-            }
+            } */
 
+        })
+
+        //////////////////////////////// DELETE PRODUCT (pid) FROM CART (cid)
+        this.router.delete(`${this.path}/:cid/products/:pid`, async (req, res) => {
+            const cartId = req.params.cid
+            const prodId = req.params.pid
+            
+            try {
+                await this.manager.deleteProductFromCart(cartId, prodId)
+                res.json({status: 200, message: `Product ${prodId} deleted from cart ${cartId}`})
+            } catch (err) {
+                res.json({status: 400, message: "Error deleting prod from cart", err})
+            }
+        })
+
+        //////////////////////////////// UPDATE PRODUCTS IN CART (cid)
+        this.router.put(`${this.path}/:cid`, async (req, res) => {
+            const cartId = req.params.cid 
+            const newProducts = req.body            //toma el json del body
+            const { products } = newProducts        //toma la propiedad products del json (body)
+            try {
+                await this.manager.putProductsInCart(cartId, products)
+                res.json({status: 200, message: `Products added successfully in cart ${cartId}`})
+            } catch (err) {
+                res.json({status: 400, message: "Error adding new products array", err})
+            }
+        })
+
+        //////////////////////////////// UPDATE PRODUCT QUANTITY (pid) IN CART (pid)
+        this.router.put(`${this.path}/:cid/products/:pid`, async (req, res) => {
+            const cartId = req.params.cid
+            const prodId = req.params.pid
+            const newQuantity = req.body
+
+            try {
+                await this.manager.putProductInCart(cartId, prodId, newQuantity)
+                res.json({status: 200, message: `Product: ${prodId} updated successfully in cart: ${cartId}`})
+            } catch (err) {
+                res.json({status: 400, message: "Error updating product in cart", err})
+            }
+        })
+
+        //////////////////////////////// DELETE ALL PRODUCTS FROM CART (cid)
+        this.router.delete(`${this.path}/:cid/`, async (req, res) => {
+            const cartId = req.params.cid
+            try {
+                await this.manager.deleteProductsFromCart(cartId)
+                res.json({status: 200, message: `Products deleted from cart ${cartId}`})
+            } catch (err) {
+                res.json({status: 400, message: "Error deleting prods from cart", err})
+            }
         })
     }
 }
