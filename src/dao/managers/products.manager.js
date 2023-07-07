@@ -3,7 +3,7 @@ const productsModel = require('../models/products.model.js');
 class ProductsManager {
     getProducts = async () => {
         try {
-            const products = await productsModel.find({})
+            const products = await productsModel.find({}).lean()
             return products
         } catch(err) {
             console.log('Error to get products', err);

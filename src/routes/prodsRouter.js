@@ -18,9 +18,11 @@ class ProdsRouter {
         const sortVal = (sort) => {  
             let sortLow = sort.toLowerCase();
             if(sortLow === 'asc') {
+                /* return { price: 1 } */
                 return { price: 1 }
             } else if(sortLow === 'desc') {
-                return { price: -1 } 
+                /* return { price: -1 }  */
+                return { price: -1 }
             }
         }
         
@@ -29,13 +31,26 @@ class ProdsRouter {
             let sortOption;
             const baseURL = 'http://localhost:5000/api/products/'
             const { limit = 10, page = 1, query, sort } = req.query
-            const filter = query ? { category: query.toUpperCase() } : {}           //si llega por el params "query" se hara el filtrado en el paginate
-            if(sort) sortOption = sortVal(sort)                                 //dependiendo que valor de sort llego lo aplica en el options del paginate
-            const { totalDocs, docs, totalPages, hasPrevPage, hasNextPage, nextPage, prevPage, prevLink, nextLink } = await productsModel.paginate(filter, { limit, page, sortOption, lean: true })
+            const filter = query ? { category: query.toUpperCase() } : {}           //si llega por el params "query" se hara el filtrado en la aggregation 
+    
+            const { totalDocs, totalPages, hasPrevPage, hasNextPage, nextPage, prevPage } = await productsModel.paginate({}, { page, lean: true })
 
+            const pipeline = [
+                { $match: filter },
+                { $sort: { price: sortOption } },
+                { $limit: Number(limit) },
+              ];
+
+            if(sort) {                                  //dependiendo si llega o no el sort por query, suma un $sort al aggregation dependiendo si es asc o desc
+                sortOption = sortVal(sort)              //***************** NO FUNCIONA ***********/
+                pipeline.unshift({ $sort: sortOption })
+            }
+
+            const docsPaginated = await productsModel.aggregate(pipeline)  //devuelve los docs paginados una vez hecha la aggregation
+            
             res.json({
                 status: 200,
-                payload: docs,
+                payload: docsPaginated,
                 totalDocs,
                 totalPages,
                 prevPage,
@@ -44,7 +59,7 @@ class ProdsRouter {
                 hasPrevPage,
                 hasNextPage,
                 prevLink: hasPrevPage ? `${baseURL}?page=${page - 1}` : null,
-                nextLink: hasNextPage ? `${baseURL}?page=${page + 1}` : null   ///??????
+                nextLink: hasNextPage ? `${baseURL}?page=${page + 1}` : null  
             })
         })
 

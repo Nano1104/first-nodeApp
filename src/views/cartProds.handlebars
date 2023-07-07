@@ -1,0 +1,18 @@
+<div class="container">
+  <div class="row">
+    <div class="col-12 d-flex justify-content-center align-items-center text-center" style="height: 100vh;">
+      <div id="cartProds-container">
+        {{#if cartProds}}
+          {{#each cartProds}}
+            <h2>{{this.product.title}}</h2>
+            <p>{{this.product.description}}</p>
+            <p>Precio: {{this.product.price}}</p>
+            <p>Categoría: {{this.product.category}}</p>
+          {{/each}}
+        {{else}}
+          <h3>Sorry, this Cart has no products</h3>
+        {{/if}}
+      </div>
+    </div>
+  </div>
+</div>

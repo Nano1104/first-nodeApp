@@ -18,14 +18,12 @@ class ViewsRouter {
         this.router.get(`${this.path}/products`, async (req, res) => {
             const products = await this.prodManager.getProducts();
             res.render('products', {products});
-            //otra opcion
-            /* res.render('products', {products: products}); */
         })
 
         this.router.get(`${this.path}/carts/:cid`, async (req, res) => {
             const { cid } = req.params
             const cartProds = await this.cartManager.getCartProducts(cid)
-            res.render("cartView", {cartProds});
+            res.render("cartProds", {cartProds});
         })
 
         this.router.get(`${this.path}/chat`, async (req, res) => {

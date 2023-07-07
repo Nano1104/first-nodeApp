@@ -1,10 +1,13 @@
 <div id="prods-container">
     {{#if products}}
         {{#each products}}
-            <h2>{{this.title}}</h2>
-            <p>{{this.description}}</p>
-            <p>Precio: {{this.price}}</p>
-            <p>Categoría: {{this.category}}</p>
+            <div id="prod-container" class="m-3 text-center border d-inline-block p-5">
+                <h2>{{this.title}}</h2>
+                <p>{{this.description}}</p>
+                <p>Precio: {{this.price}}</p>
+                <p>Categoría: {{this.category}}</p>
+                <button class="btn btn-primary">AGREGAR A CARRITO</button>
+            </div>
         {{/each}}
     {{else}}
         <h3>Sorry, the Cart Products it's empty</h3>
