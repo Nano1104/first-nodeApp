@@ -15,13 +15,11 @@ class ProdsRouter {
 
     initProdsRoutes() {
 
-        const sortVal = (sort) => {  
+        const sortVal = (sort) => {             //defina el valor del sort dependiendo si es 'asc' o 'desc'
             let sortLow = sort.toLowerCase();
             if(sortLow === 'asc') {
-                /* return { price: 1 } */
                 return { price: 1 }
             } else if(sortLow === 'desc') {
-                /* return { price: -1 }  */
                 return { price: -1 }
             }
         }
@@ -37,12 +35,11 @@ class ProdsRouter {
 
             const pipeline = [
                 { $match: filter },
-                { $sort: { price: sortOption } },
                 { $limit: Number(limit) },
               ];
 
-            if(sort) {                                  //dependiendo si llega o no el sort por query, suma un $sort al aggregation dependiendo si es asc o desc
-                sortOption = sortVal(sort)              //***************** NO FUNCIONA ***********/
+            if(sort) {                                      //dependiendo si llega o no el sort por query, suma un $sort al aggregation dependiendo si 
+                sortOption = sortVal(sort)                  //es asc o desc para que haga un ordenamiento   
                 pipeline.unshift({ $sort: sortOption })
             }
 
