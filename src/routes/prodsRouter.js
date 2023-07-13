@@ -96,14 +96,13 @@ class ProdsRouter {
 
         //////////////////////////////// DELETE PRODUCT
         this.router.delete(`${this.path}/:pid`, async (req, res) => {
-            /* let io = req.app.get('socketio');       //IMPORTAMOS LA VARIABLE GLOBAL EN EL POST DESDE LA APP
-            
-            const id = Number(req.params.pid)
-            await this.manager.deleteProduct(id)
-            res.send({status: 200, message: "Product deleted successfully"})
-            io.emit('deleted-prod', await this.manager.getProducts()) */
-
-            await this.manager.deleteProduct(req.params.pid)
+            const prodId = req.params.pid
+            try {
+                await this.manager.deleteProduct(prodId)
+                res.json({status: 200, message: `Product: ${prodId} deleted`})
+            } catch (err) {
+                res.json({status: 400, message: "Error deleting product", err})
+            }
         })
 
     }

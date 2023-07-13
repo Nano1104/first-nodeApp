@@ -43,12 +43,7 @@ class ProductsManager {
     }
 
     deleteProduct = async (id) => {
-        try {
-            await productsModel.findByIdAndDelete({ _id: id })
-            console.log("product deleted successfully");
-        } catch(err) {
-            console.log("could not delete product", err);
-        }
+        await productsModel.findByIdAndDelete({ _id: id })
     }
 }
 

@@ -17,7 +17,8 @@ class ViewsRouter {
     initRoutes() {
         this.router.get(`${this.path}/products`, async (req, res) => {
             const products = await this.prodManager.getProducts();
-            res.render('products', {products});
+            /* const user = req.session.user; */
+            res.render("products", {products});
         })
 
         this.router.get(`${this.path}/carts/:cid`, async (req, res) => {
@@ -34,6 +35,14 @@ class ViewsRouter {
             res.render("realTimeProducts");
         })
 
+        //////////////////////////////// SESSION VIEWS 
+        this.router.get(`${this.path}/login`, async (req, res) => {
+            res.render("login");
+        })
+
+        this.router.get(`${this.path}/register`, async (req, res) => {
+            res.render("register");
+        })
     }
 }
 

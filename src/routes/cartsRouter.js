@@ -79,7 +79,7 @@ class CartsRouter {
 
         //////////////////////////////// POST PRODUCT IN CERTAIN CART
         /************************************  POST PRODUCT IN CART Mongo  ***************************** */
-        this.router.post(`${this.path}/:cid/product/:pid`, async (req, res) => {
+        this.router.post(`${this.path}/:cid/products/:pid`, async (req, res) => {
             const cartId = req.params.cid
             const prodId = req.params.pid
 

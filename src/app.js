@@ -3,8 +3,11 @@ const { Server } = require("socket.io");
 const cors = require('cors');
 const displayRoutes = require('express-routemap'); 
 const handlebars = require('express-handlebars');
-const { NODE_ENV, PORT } = require('./config/config.js');
+const { NODE_ENV, PORT, DB_HOST, DB_NAME, DB_PORT } = require('./config/config.js');
 const { mongoDBConnection } = require('./db/mongoConfig');  
+const cookieParser = require('cookie-parser');
+const session = require('express-session');
+const MongoStore = require('connect-mongo');
 
 //TRAEMOS EL MANAGER DE LOS MENSAJES PARA PODER TRABAJAR CON ELLOS EN EL CHAT
 const MessagesManager = require('./dao/managers/messages.manager.js');
@@ -46,6 +49,17 @@ class App {
         /* this.app.use(express.static(path.join(`${__dirname}/public`))) */
         /* this.app.use('/static', express.static(`${__dirname}/public`)); */
         this.app.use(express.static("public"))
+        this.app.use(cookieParser());
+        this.app.use(session({
+            store: MongoStore.create({
+                mongoUrl: `mongodb://${DB_HOST}:${DB_PORT}/${DB_NAME}`,
+                mongoOptions: { useNewUrlParser: true, useUnifiedTopology: true, },
+                ttl: 60
+            }),
+            secret: 'secretSession',
+            resave: false,
+            saveUninitialized: false
+        }))
     }
 
     initRoutes(routes) {
