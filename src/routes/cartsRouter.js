@@ -137,8 +137,8 @@ class CartsRouter {
         //////////////////////////////// UPDATE PRODUCTS IN CART (cid)
         this.router.put(`${this.path}/:cid`, async (req, res) => {
             const cartId = req.params.cid 
-            const newProducts = req.body            //toma el json del body
-            const { products } = newProducts        //toma la propiedad products del json (body)
+            const { products } = req.body
+
             try {
                 await this.manager.putProductsInCart(cartId, products)
                 res.json({status: 200, message: `Products added successfully in cart ${cartId}`})

@@ -70,16 +70,32 @@ class CartsManager {
     }
 
     putProductsInCart = async (cid, arrProds) => {
-        const cart = await cartsModel.findById(cid);
-        const productsUpdated = arrProds.map(prod => {      //realiza un mapeo para que a cada obj del array se le agregue la prop _id
-            let mongoId = new mongoose.Types.ObjectId()
-            const newProd = { product: mongoId.toString(), ...prod }
-            return { ...newProd, quantity: 1 };
-        })
-        await cartsModel.findByIdAndUpdate(cid, {products: [
-            ...cart.products,
-            ...productsUpdated                               //agrega el nuevo array de products pasado por el body mas los anteriores que habia en el cart
-        ]}) 
+        const cart = await cartsModel.findById(cid); 
+
+        for(const product of arrProds) {
+            const prodToAdd = await productsModel.findById(product)
+            if(prodToAdd) {                                        //verifica si el objeto que se quiere agregar o actualizar existe o no en el json de products
+                let index = cart.products.findIndex(prod => prod.product.toString() === product)
+                if(index !== -1) {                              //en caso de que el objeto ya se encuentra en el array de products del cart
+                    cart.products[index].quantity += 1              //le suma la cantidad a ese objeto en 1
+                    await cartsModel.findByIdAndUpdate(cid, {
+                        products: [
+                            ...cart.products
+                        ]
+                    })
+                } else {
+                    await cartsModel.findByIdAndUpdate(cid, {
+                        products: [
+                            ...cart.products,                   //reescribe el array de products con los prods anteriores mas el nuevo asi no se repiten
+                            {
+                                product: product,
+                                quantity: 1
+                            }
+                        ]
+                    })
+                }
+            }
+        }
     }
 
     putProductInCart = async (cid, pid, update) => {
