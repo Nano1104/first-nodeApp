@@ -48,7 +48,7 @@ class SessionRouter {
             } catch (err) {
                 res.send({status: 401, body: err})
             }
-        })
+        }) 
 
         this.router.post(`${this.path}/register`, passport.authenticate('register', {failureRedirect: '/failregister'}), async (req, res) => {
             try {
@@ -61,16 +61,14 @@ class SessionRouter {
             }
         })
 
-        this.router.get(`${this.path}/github`, passport.authenticate('github', { scope: ["user:email"] }), async (req, res) => {
-            console.log("USANDO ENDPOINT CON GITHUBSTRATEGY")
-        });
+        this.router.get(`${this.path}/github`, passport.authenticate('github'), async (req, res) => {})
 
         this.router.get(`${this.path}/github/callback`, passport.authenticate('github', {failureRedirect: '/login'}), async (req, res) => {
             try {
                 req.session.user = req.user
-                res.redirect("products")
+                res.render("products")
             } catch (err) {
-                console.log(err)
+                res.redirect(`${this.path}/login`)
             }
         })
 

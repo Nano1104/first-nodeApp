@@ -50,6 +50,7 @@ class App {
         this.app.use(express.urlencoded({ extended: true})) //Para soportar las query params
         this.app.use(express.static("public"))
         this.app.use(cookieParser());
+        initializePassport()
         this.app.use(session({
             store: MongoStore.create({
                 mongoUrl: DB_CNN ?? `mongodb://${DB_HOST}:${DB_PORT}/${DB_NAME}`,
@@ -59,8 +60,7 @@ class App {
             secret: 'secretSession',
             resave: false,
             saveUninitialized: false
-        }))
-        initializePassport()
+        })) 
         this.app.use(passport.initialize());
     }
 

@@ -13,10 +13,11 @@ const initializePassport = () => {
     passport.use('github', new GitHubStrategy({
         clientID: CLIENT_ID,
         clientSecret: CLIENT_SECRET,
-        callbackURL: "http://localhost:5000/api/session/github/callback"
+        callbackURL: "http://localhost:5000/api/session/github/callback",
+        scope: ['user:email']
     }, async (accessToken, refreshToken, profile, done) => {
         try {
-            console.log(profile);
+            if (!profile._json.email) throw 'El usuario no tiene un email asociado en github'
             let user = await userModel.findOne({ email: profile._json.email });
             if (!user) {
                 let newUser = {
@@ -24,7 +25,7 @@ const initializePassport = () => {
                     last_name: '',
                     age: 0,
                     phone: ' ',
-                    email: profile._json.email,
+                    email: profile._json?.email,
                     password: ' ',
                     role: "usuario"
                 }
