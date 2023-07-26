@@ -72,8 +72,12 @@ class SessionRouter {
             }
         })
 
-        this.router.get('/faillogin', (req, res) => res.send({error: "Failed login"}))
-        this.router.get('/failregister', (req, res) => res.send({error: "Failed register"}))
+        this.router.get('/faillogin', (req, res) => {
+            res.render("../../views/faillogin");
+        })
+        this.router.get('/failregister', (req, res) => {
+            res.render("failregister");
+        })
     }
 }
 

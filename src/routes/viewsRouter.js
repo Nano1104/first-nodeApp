@@ -43,6 +43,14 @@ class ViewsRouter {
         this.router.get(`${this.path}/register`, async (req, res) => {
             res.render("register");
         })
+
+        /* this.router.get(`${this.path}/faillogin`, async (req, res) => {
+            
+        })
+
+        this.router.get(`${this.path}/failregister`, async (req, res) => {
+            
+        }) */
     }
 }
 

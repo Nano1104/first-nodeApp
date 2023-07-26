@@ -40,11 +40,15 @@ const initializePassport = () => {
         }
     }));
 
-    passport.use('register', new LocalStrategy( {passReqToCallback: true, usernameField: 'email'}, async(req, username, password, done) => {
-        const { first_name, last_name, age, email, phone } = req.body;
+    passport.use('register', new LocalStrategy( {passReqToCallback: true, usernameField: 'email'}, async(req, email, password, done) => {
+        const { first_name, last_name, age, phone } = req.body;
         try {
-            const user = await userModel.findOne({ email: username });
-            if (user) return res.status(401).json({ message: "User already exists" });
+
+            if (email === 'fail@example.com') { // Simulando un fallo para el email específico
+                return done(null, false);
+            }
+            const user = await userModel.findOne({ email: email });
+            if (user) return done(null, false)
 
             const newUser = {
                 first_name,
@@ -72,7 +76,7 @@ const initializePassport = () => {
     passport.use('login', new LocalStrategy( {usernameField: 'email'}, async(username, password, done) => {
         try {
             const user = await userModel.findOne({email: username})
-            if(!user) return res.status(401).json({message: "User not found"})
+            if(!user) return done(null, false)
             if(!isValidPassword(user, password)) return done(null, false)
             return done(null, user)
         } catch (err) {
