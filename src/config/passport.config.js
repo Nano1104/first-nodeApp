@@ -4,8 +4,7 @@ const GitHubStrategy = require('passport-github2');
 const { isValidPassword, createHash } = require('../utils/encrypt.js');
 const userModel = require("../dao/models/userModel.js");
 
-const CLIENT_ID = "25e2d0c858bde7e1a3d6"
-const CLIENT_SECRET = "dc898e523da8218e43a16afc99c808fb1e063e58"
+const { CLIENT_ID, CLIENT_SECRET } = require('./config.js');    // importamos la varibales de entorno
 
 const LocalStrategy = local.Strategy; 
 
@@ -13,11 +12,9 @@ const initializePassport = () => {
     passport.use('github', new GitHubStrategy({
         clientID: CLIENT_ID,
         clientSecret: CLIENT_SECRET,
-        callbackURL: "http://localhost:5000/api/session/github/callback",
-        scope: ['user:email']
+        callbackURL: "http://localhost:5000/api/session/github/callback"
     }, async (accessToken, refreshToken, profile, done) => {
         try {
-            if (!profile._json.email) throw 'El usuario no tiene un email asociado en github'
             let user = await userModel.findOne({ email: profile._json.email });
             if (!user) {
                 let newUser = {
@@ -25,8 +22,8 @@ const initializePassport = () => {
                     last_name: '',
                     age: 0,
                     phone: ' ',
-                    email: profile._json?.email,
-                    password: ' ',
+                    email: profile._json.email ?? '',
+                    passport: '',
                     role: "usuario"
                 }
 
@@ -43,10 +40,6 @@ const initializePassport = () => {
     passport.use('register', new LocalStrategy( {passReqToCallback: true, usernameField: 'email'}, async(req, email, password, done) => {
         const { first_name, last_name, age, phone } = req.body;
         try {
-
-            if (email === 'fail@example.com') { // Simulando un fallo para el email específico
-                return done(null, false);
-            }
             const user = await userModel.findOne({ email: email });
             if (user) return done(null, false)
 

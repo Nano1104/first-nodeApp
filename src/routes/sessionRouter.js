@@ -61,15 +61,21 @@ class SessionRouter {
             }
         })
 
-        this.router.get(`${this.path}/github`, passport.authenticate('github'), async (req, res) => {})
+        this.router.get(`${this.path}/github`, passport.authenticate('github', {scope: ['user:email']}), async (req, res) => {
+            console.log("Entering github")
+        })
 
-        this.router.get(`${this.path}/github/callback`, passport.authenticate('github', {failureRedirect: '/login'}), async (req, res) => {
+        this.router.get(`${this.path}/github/callback`, passport.authenticate('github', {failureRedirect: `/login`}), async (req, res) => {
             try {
+                console.log("View Login github")
                 req.session.user = req.user
-                res.render("products")
             } catch (err) {
                 res.redirect(`${this.path}/login`)
             }
+        })
+
+        this.router.get(`/login`, (req, res) => {
+            res.render("../../views/login");
         })
 
         this.router.get('/faillogin', (req, res) => {
