@@ -2,6 +2,9 @@ const passport = require('passport');
 const { Router } = require("express");
 const { createHash, isValidPassword } = require("../utils/encrypt.js");
 
+const { generateToken } = require("../utils/jwt.js");
+const { authToken } = require("../middleware/auth_token.js");
+
 const userModel = require("../dao/models/userModel");
 const ProductsManager = require("../dao/managers/products.manager.js");     //traemos el products manager para hacer uso de los mismos
 
@@ -22,7 +25,7 @@ class SessionRouter {
             })
         })
 
-        this.router.post(`${this.path}/login`, passport.authenticate('login', {failureRedirect: '/faillogin'}), async (req, res) => {
+        this.router.post(`${this.path}/login`, authToken, passport.authenticate('login', { failureRedirect: '/faillogin' }), async (req, res) => {
             const products = await this.prodManager.getProducts();
             try {
                 const { email, password } = req.body; 
@@ -50,14 +53,21 @@ class SessionRouter {
             }
         }) 
 
+
         this.router.post(`${this.path}/register`, passport.authenticate('register', {failureRedirect: '/failregister'}), async (req, res) => {
             try {
                 const body = req.body;
+                const { email } = req.body;
+                if(!email) throw 'Error validation failed'
 
-                req.session.user = { ...body };
+                const userToAdd = { ...body, email }
+                const token = generateToken(userToAdd)
+                console.log(`TOKEN GENERADO ${token}`)
+
+                req.session.user = { ...userToAdd, token };
                 res.render("login")                //redirige al login luego de haberse registrado
             } catch (err) {
-                res.send({status: 500, message: "Error creating user", err})
+                res.render("failregister"); 
             }
         })
 
@@ -69,20 +79,28 @@ class SessionRouter {
             try {
                 console.log("View Login github")
                 req.session.user = req.user
+                res.redirect('/api/views/private')
             } catch (err) {
                 res.redirect(`${this.path}/login`)
             }
         })
 
         this.router.get(`/login`, (req, res) => {
-            res.render("../../views/login");
+            res.render("login");
         })
 
         this.router.get('/faillogin', (req, res) => {
-            res.render("../../views/faillogin");
+            res.render("faillogin");
         })
+        
         this.router.get('/failregister', (req, res) => {
             res.render("failregister");
+        })
+
+        this.router.get(`${this.path}/private`, authToken, async(req, res) => {
+            const decodedToken = req.user
+            const token = req.token
+            res.json({ token, decodedToken })
         })
     }
 }

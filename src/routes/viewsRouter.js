@@ -35,6 +35,14 @@ class ViewsRouter {
             res.render("realTimeProducts");
         })
 
+        this.router.get(`${this.path}/private`, async (req, res) => {
+            const data = {
+                user: req.session.user.first_name,
+                edad: req.session.user.age
+            }
+            res.render('private', data);
+        })
+
         //////////////////////////////// SESSION VIEWS 
         this.router.get(`${this.path}/login`, async (req, res) => {
             res.render("login");
@@ -43,14 +51,6 @@ class ViewsRouter {
         this.router.get(`${this.path}/register`, async (req, res) => {
             res.render("register");
         })
-
-        /* this.router.get(`${this.path}/faillogin`, async (req, res) => {
-            
-        })
-
-        this.router.get(`${this.path}/failregister`, async (req, res) => {
-            
-        }) */
     }
 }
 

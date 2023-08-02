@@ -16,7 +16,8 @@ const {
     DB_USER,
     DB_PASSWORD,
     CLIENT_ID,
-    CLIENT_SECRET
+    CLIENT_SECRET,
+    KEY_TOKEN
 } = process.env
 
 module.exports = {
@@ -29,5 +30,6 @@ module.exports = {
     DB_USER,
     DB_PASSWORD,
     CLIENT_ID,
-    CLIENT_SECRET
+    CLIENT_SECRET,
+    KEY_TOKEN
 }
