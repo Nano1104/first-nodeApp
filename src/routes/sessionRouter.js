@@ -25,7 +25,7 @@ class SessionRouter {
             })
         })
 
-        this.router.post(`${this.path}/login`, authToken, passport.authenticate('login', { failureRedirect: '/faillogin' }), async (req, res) => {
+        this.router.post(`${this.path}/login`, passport.authenticate('login', { failureRedirect: `/api${this.path}/faillogin` }), async (req, res) => {
             const products = await this.prodManager.getProducts();
             try {
                 const { email, password } = req.body; 
@@ -34,11 +34,15 @@ class SessionRouter {
                 if(!findUser) return res.status(401).json({message: "User not found"})    //valida si el user ya existe    
                 if(!isValidPassword(findUser, password)) return res.status(401).json({message: "password incorrect"})        //o si la contraseña es incorrecta     
                 
+                const token = generateToken(findUser)
+
                 req.session.user = {
                     ...findUser,
                     password: ''
                 }
                 
+                res.cookie('token', token, { httpOnly: true });
+
                 res.render("products", {
                     first_name: req.session.user._doc.first_name,
                     last_name: req.session.user._doc.last_name,
@@ -49,22 +53,20 @@ class SessionRouter {
                     products                                        //manda el array de products de la db de mongo que obtuvimos arriba
                 })
             } catch (err) {
-                res.send({status: 401, body: err})
+                res.status(500).json({ message: "Internal Server Error", error: err });
             }
         }) 
 
 
-        this.router.post(`${this.path}/register`, passport.authenticate('register', {failureRedirect: '/failregister'}), async (req, res) => {
+        this.router.post(`${this.path}/register`, passport.authenticate('register', {failureRedirect: `/api${this.path}/failregister`}), async (req, res) => {
             try {
                 const body = req.body;
                 const { email } = req.body;
                 if(!email) throw 'Error validation failed'
 
                 const userToAdd = { ...body, email }
-                const token = generateToken(userToAdd)
-                console.log(`TOKEN GENERADO ${token}`)
 
-                req.session.user = { ...userToAdd, token };
+                req.session.user = { ...userToAdd };
                 res.render("login")                //redirige al login luego de haberse registrado
             } catch (err) {
                 res.render("failregister"); 
@@ -75,32 +77,32 @@ class SessionRouter {
             console.log("Entering github")
         })
 
-        this.router.get(`${this.path}/github/callback`, passport.authenticate('github', {failureRedirect: `/login`}), async (req, res) => {
+        this.router.get(`${this.path}/github/callback`, passport.authenticate('github', {failureRedirect: `/api${this.path}/login`}), async (req, res) => {
             try {
-                console.log("View Login github")
                 req.session.user = req.user
-                res.redirect('/api/views/private')
+                res.redirect(`/api${this.path}/private`)
             } catch (err) {
-                res.redirect(`${this.path}/login`)
+                res.status(500).json({message: "Error login with github", error: err})
             }
         })
 
-        this.router.get(`/login`, (req, res) => {
+        this.router.get(`${this.path}/login`, (req, res) => {
             res.render("login");
         })
 
-        this.router.get('/faillogin', (req, res) => {
+        this.router.get(`${this.path}/faillogin`, (req, res) => {
             res.render("faillogin");
         })
         
-        this.router.get('/failregister', (req, res) => {
+        this.router.get(`${this.path}/failregister`, (req, res) => {
             res.render("failregister");
         })
 
-        this.router.get(`${this.path}/private`, authToken, async(req, res) => {
+        this.router.get(`${this.path}/private`, async(req, res) => {
             const decodedToken = req.user
             const token = req.token
-            res.json({ token, decodedToken })
+            res.render("private", { token, decodedToken })
+           /*  res.json({ token, decodedToken }) */
         })
     }
 }

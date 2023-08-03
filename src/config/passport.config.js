@@ -23,8 +23,8 @@ const initializePassport = () => {
                     last_name: '',
                     age: 0,
                     phone: ' ',
-                    email: profile._json.email ?? '',
-                    passport: '',
+                    email: profile._json.email ?? ' ',
+                    passport: ' ',
                     role: "usuario"
                 }
 
@@ -50,7 +50,7 @@ const initializePassport = () => {
                 age,
                 email,
                 phone,
-                password: createHash(password), // Corrected the field name to 'password'
+                password: createHash(password),  
             };
 
             if(email === 'adminCoder@code.com' && password === 'adminCoder3r123') {        //valida si el email y el pswrd son del admin
@@ -63,7 +63,7 @@ const initializePassport = () => {
             let result = await userModel.create(newUser);
             return done(null, result);
         } catch (err) {
-            return done(`Error registering user ${err}`)
+            return done(err)
         }
     }))
 
