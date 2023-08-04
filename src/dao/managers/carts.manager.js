@@ -1,5 +1,3 @@
-const mongoose = require('mongoose');
-
 const cartsModel = require('../models/carts.model.js');
 const productsModel = require('../models/products.model.js');
 
@@ -98,7 +96,7 @@ class CartsManager {
         }
     }
 
-    putProductInCart = async (cid, pid, update) => {
+    updateProdQuantityInCart = async (cid, pid, update) => {
         const cart = await cartsModel.findById(cid);
         const index = cart.products.findIndex(p => p.product.toString() === pid);           //busca el indice del prod a actualizar pasando el p.product a string 
                                                                                             //ya que es un ObjectId, de esa manera lo podemos comparar con pid

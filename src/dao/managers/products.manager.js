@@ -2,21 +2,13 @@ const productsModel = require('../models/products.model.js');
 
 class ProductsManager {
     getProducts = async () => {
-        try {
-            const products = await productsModel.find({}).lean()
-            return products
-        } catch(err) {
-            console.log('Error to get products', err);
-        }
+        const products = await productsModel.find({}).lean()
+        return products
     }
 
     getProductById = async (id) => {
-        try {
-            const productFound = await productsModel.findById({ _id: id})
-            return productFound
-        } catch(err) {
-            console.log('Error to get product by Id', err);
-        }
+        const productFound = await productsModel.findById({ _id: id})
+        return productFound
     }
 
     creatProduct = async (productBody) => {
@@ -27,19 +19,13 @@ class ProductsManager {
             ...productBody,
             code: productBody.code.toLowerCase()
         })
-        console.log(newProduct)
         return newProduct
     }
 
     updateProduct = async (id, update) => {
-        try {
-            await productsModel.findByIdAndUpdate({ _id: id }, {
-                ...update
-            })
-            console.log("product updated successfully");
-        } catch(err) {
-            console.log("could not update product", err);
-        }
+        await productsModel.findByIdAndUpdate({ _id: id }, {
+            ...update
+        })
     }
 
     deleteProduct = async (id) => {
