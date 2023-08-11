@@ -2,17 +2,18 @@ const fs = require('fs');
 const { Router } = require("express");
 
 //TRAEMOS EL PRODUCT MANAGER PARA HACER USO DE SUS METODOS Y TRABAJAR CON LOS PRODUCTS DEL JSON
-const ProductManager = require('../prodManager.js');                //este es el prodManager de Filesytem
 const CartsController = require("../controllers/carts.controller.js");
+/* const ProductManager = require('../prodManager.js');   */              //este es el prodManager de Filesytem
+
 
 
 class CartsRouter {
     path = '/carts';
-    JSONpath = 'carts.json';
     router = Router();
     cartsController = new CartsController()
     /* prodManager = new ProductManager(); */           //para usar con fileSystem
-
+    /* JSONpath = 'carts.json'; */
+    
     constructor() {
         this.initCartsRoutes();
     }

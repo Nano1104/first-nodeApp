@@ -1,11 +1,7 @@
 const cartsModel = require('../models/carts.model.js');
 const productsModel = require('../models/products.model.js');
 
-const ProductsManager = require("./products.manager.js");
-
 class CartsManager {
-    manager = new ProductsManager();
-
     getCarts = async () => {
         const carts = await cartsModel.find({}).populate('products.product')
         return carts
@@ -105,7 +101,6 @@ class CartsManager {
             ...cart.products,
         ]})
     }
-
 }
 
 module.exports = CartsManager

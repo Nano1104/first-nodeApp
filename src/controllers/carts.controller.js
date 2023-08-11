@@ -1,9 +1,9 @@
-const CartsManager = require("../dao/managers/carts.manager.js");
+const CartsService = require("../services/carts.service.js");
 
 class CartsController {
     cartsService;
     constructor() {
-        this.cartsService = new CartsManager();
+        this.cartsService = new CartsService();
     }
 
     getCarts = async (req, res) => {

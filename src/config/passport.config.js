@@ -2,7 +2,7 @@ const passport = require('passport');
 const local = require('passport-local');
 const GitHubStrategy = require('passport-github2');
 const { isValidPassword, createHash } = require('../utils/encrypt.js');
-const userModel = require("../dao/models/userModel.js");
+const userModel = require("../models/userModel.js");
 
 const { CLIENT_ID, CLIENT_SECRET } = require('./config.js');    // importamos la varibales de entorno
 

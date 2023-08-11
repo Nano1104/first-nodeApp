@@ -17,7 +17,8 @@ const {
     DB_PASSWORD,
     CLIENT_ID,
     CLIENT_SECRET,
-    KEY_TOKEN
+    KEY_TOKEN,
+    PERSISTANCE
 } = process.env
 
 module.exports = {
@@ -31,5 +32,6 @@ module.exports = {
     DB_PASSWORD,
     CLIENT_ID,
     CLIENT_SECRET,
-    KEY_TOKEN
+    KEY_TOKEN,
+    PERSISTANCE
 }

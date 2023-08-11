@@ -12,7 +12,7 @@ const passport = require('passport');
 const { initializePassport } = require('./config/passport.config');
 
 //TRAEMOS EL MANAGER DE LOS MENSAJES PARA PODER TRABAJAR CON ELLOS EN EL CHAT
-const MessagesManager = require('./dao/managers/messages.manager.js');
+const MessagesManager = require('./managers/messages.manager.js');
 
 class App {
     app;

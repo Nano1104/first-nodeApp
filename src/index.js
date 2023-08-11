@@ -10,7 +10,3 @@ const app = new App([new ProdsRouter(), new CartsRouter(), new ViewsRouter(), ne
 
 app.listen()
 
-
-/* VXhcbzmFCzPLq0YS */
-
-/* mongodb://localhost:27017 */
