@@ -3,13 +3,14 @@ const { Server } = require("socket.io");
 const cors = require('cors');
 const displayRoutes = require('express-routemap'); 
 const handlebars = require('express-handlebars');
-const { NODE_ENV, PORT, DB_HOST, DB_NAME, DB_PORT, DB_CNN } = require('./config/config.js');
-const { mongoDBConnection } = require('./db/mongoConfig');  
+/* const { mongoDBConnection } = require('./db/mongoConfig');   */
+const { initializeAppPersistence } = require("./dao/factory.js");
 const cookieParser = require('cookie-parser');
 const session = require('express-session');
 const MongoStore = require('connect-mongo');
 const passport = require('passport');
 const { initializePassport } = require('./config/passport.config');
+const { NODE_ENV, PORT, DB_HOST, DB_NAME, DB_PORT, DB_CNN } = require('./config/config.js');
 
 //TRAEMOS EL MANAGER DE LOS MENSAJES PARA PODER TRABAJAR CON ELLOS EN EL CHAT
 const MessagesManager = require('./managers/messages.manager.js');
@@ -27,8 +28,8 @@ class App {
         this.port = PORT || 5000;
         
         this.initMiddlewares();
+        /* this.initializeConnection(); */
         this.initRoutes(routes);
-        this.connectDB();
         this.initHandlebars();
     }
 
@@ -40,9 +41,9 @@ class App {
         this.server = this.app.listen(this.port, () => done())
     }
 
-    async connectDB() {
-        await mongoDBConnection()
-    }
+    /* async initializeConnection() {
+        await initializeAppPersistence();
+    } */
 
     initMiddlewares() {
         this.app.use(cors())

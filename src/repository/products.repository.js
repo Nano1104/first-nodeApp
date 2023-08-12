@@ -1,35 +1,27 @@
-const productsModel = require('../models/products.model.js');
 
 class ProductsRepositoryDao {
+    constructor(dao) {
+        this.dao = dao;
+    }
+
     getProducts = async () => {
-        const products = await productsModel.find({}).lean()
-        return products
+        return await this.dao.getProducts();
     }
 
-    getProductById = async (id) => {
-        const productFound = await productsModel.findById({ _id: id})
-        return productFound
+    getProductById = async () => {
+        return await this.dao.getProductById();
     }
 
-    creatProduct = async (productBody) => {
-        const { title, description, code, price, stock, category } = productBody
-        if(!title || !description || !code || !price || !stock || !category) return response.send({status: "error", message: "Incompleted fields"})
+    createProduct = async () => {
 
-        const newProduct = await productsModel.create({
-            ...productBody,
-            code: productBody.code.toLowerCase()
-        })
-        return newProduct
     }
 
-    updateProduct = async (id, update) => {
-        await productsModel.findByIdAndUpdate({ _id: id }, {
-            ...update
-        })
+    updateProduct = async () => {
+
     }
 
-    deleteProduct = async (id) => {
-        await productsModel.findByIdAndDelete({ _id: id })
+    deleteProduct = async () => {
+
     }
 }
 

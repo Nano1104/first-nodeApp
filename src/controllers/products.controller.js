@@ -1,10 +1,11 @@
-const ProductsService = require("../services/products.service.js");
+const { Products } = require("../dao/factory.js");
+const ProductsServiceDao = require("../services/products.service.js");
 const productsModel = require("../models/products.model.js");
 
 class ProductsController {
     productsService;
     constructor() {
-        this.productsService = new ProductsService();  //hacemos una instancia del manager de products para usarlo como service en el controller
+        this.productsService = new ProductsServiceDao(new Products);  //hacemos una instancia del manager de products para usarlo como service en el controller
     }
 
     getProducts = async (req, res) => {

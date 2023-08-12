@@ -18,7 +18,7 @@ const {
     CLIENT_ID,
     CLIENT_SECRET,
     KEY_TOKEN,
-    PERSISTANCE
+    PERSISTENCE
 } = process.env
 
 module.exports = {
@@ -33,5 +33,5 @@ module.exports = {
     CLIENT_ID,
     CLIENT_SECRET,
     KEY_TOKEN,
-    PERSISTANCE
+    PERSISTENCE
 }

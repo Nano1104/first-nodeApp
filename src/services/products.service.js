@@ -1,31 +1,29 @@
-/* const productsModel = require('../models/products.model.js'); */
-const ProductsRepositoryDao = require('../repository/products.repository.js');
 
-class ProductsService {
-    constructor() {
-        this.productsRepository = new ProductsRepositoryDao()
+class ProductsServiceDao {
+    constructor(dao) {
+        this.dao = dao;
     }
 
     getProducts = async () => {
-        return await this.productsRepository.getProducts();
+        return await this.dao.getProducts();
     }
 
     getProductById = async (id) => {
-        return await this.productsRepository.getProductById(id);
+        return await this.dao.getProductById(id);
     }
 
     creatProduct = async (productBody) => {
-        const newProduct = await this.productsRepository.createProduct(productBody)
+        const newProduct = await this.dao.createProduct(productBody)
         return newProduct
     }
 
     updateProduct = async (id, update) => {
-        await this.productsRepository.updateProduct(id, update)
+        await this.dao.updateProduct(id, update)
     }
 
     deleteProduct = async (id) => {
-        await this.productsRepository.deleteProduct(id)
+        await this.dao.deleteProduct(id)
     }
 }
 
-module.exports = ProductsService;
+module.exports = ProductsServiceDao;
