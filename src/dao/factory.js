@@ -8,14 +8,13 @@ const initializeAppPersistence = async () => {
             console.log(`PERSISTENCE: ${PERSISTENCE}`);
             await mongoDBConnection();
             const ProductsMongoDao = require('./mongo/products.mongo.js');
-            Products = ProductsMongoDao
-            console.log(Products)
+            Products = new ProductsMongoDao()
             break;
     
         default:
             console.log(`PERSISTENCE: ${PERSISTENCE}`);
             const ProductsMemDao = require('./memory/products.memory.js');
-            Products = ProductsMemDao
+            Products = new ProductsMemDao()
             break;
     }
 }
