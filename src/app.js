@@ -37,10 +37,6 @@ class App {
         return this.app;
     }
 
-    closeServer(done) {
-        this.server = this.app.listen(this.port, () => done())
-    }
-
     /* async initializeConnection() {
         await initializeAppPersistence();
     } */

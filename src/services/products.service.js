@@ -1,28 +1,28 @@
 
 class ProductsServiceDao {
-    constructor(dao) {
-        this.dao = dao;
+    constructor(repository) {
+        this.repository = repository;
     }
 
     getProducts = async () => {
-        return await this.dao.getProducts();
+        return await this.repository.getProducts();
     }
 
     getProductById = async (id) => {
-        return await this.dao.getProductById(id);
+        return await this.repository.getProductById(id);
     }
 
     creatProduct = async (productBody) => {
-        const newProduct = await this.dao.createProduct(productBody)
+        const newProduct = await this.repository.createProduct(productBody)
         return newProduct
     }
 
     updateProduct = async (id, update) => {
-        await this.dao.updateProduct(id, update)
+        await this.repository.updateProduct(id, update)
     }
 
     deleteProduct = async (id) => {
-        await this.dao.deleteProduct(id)
+        await this.repository.deleteProduct(id)
     }
 }
 

@@ -2,7 +2,6 @@
 class ProductsRepositoryDao {
     constructor(dao) {
         this.dao = dao;
-        console.log(dao) ///////////////////undefined
     }
 
     getProducts = async () => {
@@ -10,20 +9,20 @@ class ProductsRepositoryDao {
     }
 
     getProductById = async (id) => {
-        await this.dao.getProductById(id);
-        console.log(dao)
+        const product = await this.dao.getProductById(id);
+        return product
     }
 
     createProduct = async (product) => {
         return await this.dao.createProduct(product);
     }
 
-    updateProduct = async () => {
-
+    updateProduct = async (pid, update) => {
+        return await this.dao.updateProduct(pid, update)
     }
 
-    deleteProduct = async () => {
-
+    deleteProduct = async (id) => {
+        return await this.dao.deleteProduct(id)
     }
 }
 

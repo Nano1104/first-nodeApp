@@ -21,7 +21,7 @@ class ProdsRouter {
         this.router.get(`${this.path}/:pid`, this.prodsController.getProductById)
 
         //////////////////////////////// ADD PRODUCT
-        this.router.post(`${this.path}`, this.prodsController.creatProduct) 
+        this.router.post(`${this.path}`, this.prodsController.createProduct) 
 
         //////////////////////////////// UPDATE PRODUCT
         this.router.put(`${this.path}/:pid`, this.prodsController.updateProduct)

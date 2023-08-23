@@ -1,12 +1,11 @@
-/* const { Products } = require("../dao/factory.js"); */
-/* const ProductsServiceDao = require("../services/products.service.js"); */
 const ProductsServiceDao = require("../repository/index.js");
 const productsModel = require("../models/products.model.js");
 
 class ProductsController {
     productsService;
     constructor() {
-        this.productsService = ProductsServiceDao;  //hacemos una instancia del manager de products para usarlo como service en el controller
+        this.productsService = ProductsServiceDao;  //hacemos una instancia del service de products para usarlo como service en el controller
+        console.log(this.productsService)
     }
 
     getProducts = async (req, res) => {
@@ -66,10 +65,10 @@ class ProductsController {
         
     }
 
-    creatProduct = async (req, res) => {
+    createProduct = async (req, res) => {
         try {
             const product = req.body
-            await this.productsService.creatProduct(product)
+            await this.productsService.createProduct(product)
             res.status(200).json({message: "Product added successfully"})
         } catch(err) {
             res.status(400).json({message: "Error creating product, some fields may be empty", err: err})

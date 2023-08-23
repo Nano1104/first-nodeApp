@@ -11,7 +11,7 @@ class ProductsMongoDao {
         return productFound
     }
 
-    creatProduct = async (productBody) => {
+    createProduct = async (productBody) => {
         const { title, description, code, price, stock, category } = productBody
         if(!title || !description || !code || !price || !stock || !category) return response.send({status: "error", message: "Incompleted fields"})
 

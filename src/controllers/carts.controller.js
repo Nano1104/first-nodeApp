@@ -1,9 +1,9 @@
-const CartsService = require("../services/carts.service.js");
+const CartsServiceDao = require("../repository/index.js");
 
 class CartsController {
     cartsService;
     constructor() {
-        this.cartsService = new CartsService();
+        this.cartsService = CartsServiceDao;
     }
 
     getCarts = async (req, res) => {
