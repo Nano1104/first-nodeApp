@@ -9,8 +9,7 @@ class ProductsRepositoryDao {
     }
 
     getProductById = async (id) => {
-        const product = await this.dao.getProductById(id);
-        return product
+        return await this.dao.getProductById(id);
     }
 
     createProduct = async (product) => {

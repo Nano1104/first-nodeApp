@@ -1,4 +1,4 @@
-const auth = (req, res, next) => {
+const authPrivate = (req, res, next) => {
     try {
       if (req.session.user) return next() 
       throw 'No tiene una session'
@@ -7,6 +7,4 @@ const auth = (req, res, next) => {
     }
   }
   
-module.exports = {
-    auth
-}
+module.exports = { authPrivate }

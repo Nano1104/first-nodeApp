@@ -1,22 +1,11 @@
-const { createHash, isValidPassword } = require("../utils/encrypt.js");
+const { isValidPassword, createHash } = require("../utils/encrypt.js");
 const { generateToken } = require("../utils/jwt.js");
-const { authToken } = require("../middleware/auth_token.js");
 
-const ProductsService = require("../services/products.service.js");  
 const userModel = require("../models/userModel.js");
 
 class SessionController {
-    productsService = new ProductsService();
-
-    sessionLogout = async(req, res) => {
-        req.session.destroy(err => {
-            if(!err) res.render("login")       //redirige a la vista de login para iniciar session nuevamente luego de haberla cerrado
-            else res.send({status: 401, body: err})
-        })
-    }
-
+    ////////////////////////////////////// LOGIN
     sessionLogin = async(req, res) => {
-        const products = await this.productsService.getProducts();
         try {
             const { email, password } = req.body; 
             const findUser = await userModel.findOne({ email })
@@ -25,44 +14,37 @@ class SessionController {
             if(!isValidPassword(findUser, password)) return res.status(401).json({message: "password incorrect"})        //o si la contraseña es incorrecta     
             
             const token = generateToken(findUser)
+            console.log(token)
+            res.cookie('userToken', token, { httpOnly: true });
 
-            req.session.user = {
-                ...findUser,
-                password: ''
-            }
-            
-            res.cookie('token', token, { httpOnly: true });
-
-            res.render("products", {
-                first_name: req.session.user._doc.first_name,
-                last_name: req.session.user._doc.last_name,
-                email: req.session.user._doc.email,  
-                age: req.session.user._doc.age,
-                phone: req.session.user._doc.phone,
-                role: req.session.user._doc.role,
-                products                                        //manda el array de products de la db de mongo que obtuvimos arriba
-            })
+            res.json({message: "Token generado", token})
         } catch (err) {
             res.status(500).json({ message: "Internal Server Error", error: err });
         }
     }
 
+    ////////////////////////////////////// REGISTER
     sessionRegister = async(req, res) => {
         try {
-            const body = req.body;
-            const { email } = req.body;
+            const { email, password, role } = req.body;
             if(!email) throw 'Error validation failed'
+            
+            const userToAdd = {
+                ...req.body,
+                password: createHash(password)
+            }
 
-            const userToAdd = { ...body, email }
+            if(!role) userToAdd.role = "public"
 
-            req.session.user = { ...userToAdd };
+            await userModel.create(userToAdd)
             res.render("login")                //redirige al login luego de haberse registrado
         } catch (err) {
             res.render("failregister"); 
         }
     }
 
-    sessionGithub = async(req, res) => {
+    ////////////////////////////////////// GITHUB
+    sessionGithub = async (req, res) => {
         try {
             req.session.user = req.user
             res.redirect("/api/session/private")

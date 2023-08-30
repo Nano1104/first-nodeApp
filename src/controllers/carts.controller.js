@@ -1,4 +1,4 @@
-const CartsServiceDao = require("../repository/index.js");
+const { CartsServiceDao } = require("../repository/index.js");
 
 class CartsController {
     cartsService;

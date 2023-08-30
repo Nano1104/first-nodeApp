@@ -1,4 +1,5 @@
 const { Router } = require('express');
+const { authRole } = require("../middleware/auth_role.js");
 
 //TRAEMOS EL PRODUCT MANAGER PARA HACER USO DE SUS METODOS
 const ViewsController = require("../controllers/views.controller.js");
@@ -19,7 +20,7 @@ class ViewsRouter {
         this.router.get(`${this.path}/carts/:cid`, this.viewsController.renderCart);
 
         //////////////////////////////// WEBSOCKETS VIEWS
-        this.router.get(`${this.path}/chat`, this.viewsController.renderChat)
+        this.router.get(`${this.path}/chat`, authRole('user'), this.viewsController.renderChat)
 
         this.router.get(`${this.path}/realtimeproducts`, this.viewsController.renderRealTimeProducts)
 

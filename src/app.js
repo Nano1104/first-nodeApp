@@ -1,15 +1,16 @@
 const express = require('express');
-const { Server } = require("socket.io");
 const cors = require('cors');
 const displayRoutes = require('express-routemap'); 
 const handlebars = require('express-handlebars');
-/* const { mongoDBConnection } = require('./db/mongoConfig');   */
-const { initializeAppPersistence } = require("./dao/factory.js");
-const cookieParser = require('cookie-parser');
-const session = require('express-session');
-const MongoStore = require('connect-mongo');
+///SOCKET
+const { Server } = require("socket.io");
+///PASSPORT
 const passport = require('passport');
 const { initializePassport } = require('./config/passport.config');
+///MIDDLEWARES
+const cookieParser = require('cookie-parser');
+const { setLogger } = require("./utils/logger.js");
+///ENV VARIBALES
 const { NODE_ENV, PORT, DB_HOST, DB_NAME, DB_PORT, DB_CNN } = require('./config/config.js');
 
 //TRAEMOS EL MANAGER DE LOS MENSAJES PARA PODER TRABAJAR CON ELLOS EN EL CHAT
@@ -28,7 +29,6 @@ class App {
         this.port = PORT || 5000;
         
         this.initMiddlewares();
-        /* this.initializeConnection(); */
         this.initRoutes(routes);
         this.initHandlebars();
     }
@@ -37,28 +37,15 @@ class App {
         return this.app;
     }
 
-    /* async initializeConnection() {
-        await initializeAppPersistence();
-    } */
-
     initMiddlewares() {
         this.app.use(cors())
         this.app.use(express.json());
         this.app.use(express.urlencoded({ extended: true})) //Para soportar las query params
         this.app.use(express.static("public"))
         this.app.use(cookieParser());
-        this.app.use(session({
-            store: MongoStore.create({
-                mongoUrl: DB_CNN ?? `mongodb://${DB_HOST}:${DB_PORT}/${DB_NAME}`,
-                mongoOptions: { useNewUrlParser: true, useUnifiedTopology: true, },
-                ttl: 50
-            }),
-            secret: 'secretSession',
-            resave: false,
-            saveUninitialized: false
-        })) 
         initializePassport()
         this.app.use(passport.initialize());
+        this.app.use(setLogger);
     }
 
     initRoutes(routes) {

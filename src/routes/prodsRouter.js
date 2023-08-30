@@ -1,14 +1,14 @@
 const { Router } = require("express");
+const { authRole } = require("../middleware/auth_role.js")
 
 //TRAEMOS EL PRODUCT MANAGER PARA HACER USO DE SUS METODOS
 const ProductsController = require("../controllers/products.controller.js");
 
 class ProdsRouter {
-    path = "/products";
-    router = Router();
-    prodsController = new ProductsController();
-
     constructor() {
+        this.path = "/products";
+        this.router = Router();
+        this.prodsController = new ProductsController();
         this.initProdsRoutes();
     }
 
@@ -21,13 +21,13 @@ class ProdsRouter {
         this.router.get(`${this.path}/:pid`, this.prodsController.getProductById)
 
         //////////////////////////////// ADD PRODUCT
-        this.router.post(`${this.path}`, this.prodsController.createProduct) 
+        this.router.post(`${this.path}`, authRole('user'), this.prodsController.createProduct) 
 
         //////////////////////////////// UPDATE PRODUCT
-        this.router.put(`${this.path}/:pid`, this.prodsController.updateProduct)
+        this.router.put(`${this.path}/:pid`, authRole('admin'), this.prodsController.updateProduct)
 
         //////////////////////////////// DELETE PRODUCT
-        this.router.delete(`${this.path}/:pid`, this.prodsController.deleteProduct)
+        this.router.delete(`${this.path}/:pid`, authRole('admin'), this.prodsController.deleteProduct)
 
     }
 }

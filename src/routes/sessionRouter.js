@@ -1,6 +1,7 @@
 const { Router } = require("express");
 const passport = require('passport');
 
+const { authToken } = require("../middleware/auth_token.js");
 const SessionController = require("../controllers/session.controller.js");
 
 class SessionRouter {
@@ -13,14 +14,12 @@ class SessionRouter {
     }
 
     initProdsRoutes() {
-        //////////////////////////////// SESSION-LOGOUT
-        this.router.get(`${this.path}/logout`, this.sessionController.sessionLogout);
 
         //////////////////////////////// SESSION-LOGIN
-        this.router.post(`${this.path}/login`, passport.authenticate('login', { failureRedirect: `/api${this.path}/faillogin` }), this.sessionController.sessionLogin); 
+        this.router.post(`${this.path}/login`, this.sessionController.sessionLogin); 
 
         //////////////////////////////// SESSION-REGISTER
-        this.router.post(`${this.path}/register`, passport.authenticate('register', {failureRedirect: `/api${this.path}/failregister`}), this.sessionController.sessionRegister);
+        this.router.post(`${this.path}/register`, this.sessionController.sessionRegister);
 
         //////////////////////////////// GITHUB
         this.router.get(`${this.path}/github`, passport.authenticate('github', {scope: ['user:email']}), async (req, res) => {})
@@ -35,9 +34,6 @@ class SessionRouter {
         
         //////////////////////////////// FAILREGISTER
         this.router.get(`${this.path}/failregister`, this.sessionController.renderFailRegister)
-
-        //////////////////////////////// PRIVATE
-        this.router.get(`${this.path}/private`, async(req, res) => this.sessionController.renderPrivate)
     }
 }
 

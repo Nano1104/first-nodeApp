@@ -8,6 +8,7 @@ class ProductsMongoDao {
 
     getProductById = async (id) => {
         const productFound = await productsModel.findById({ _id: id})
+        console.log(productFound)
         return productFound
     }
 

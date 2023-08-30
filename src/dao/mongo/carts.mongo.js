@@ -1,3 +1,4 @@
+const productsModel = require("../../models/products.model.js");
 const cartsModel = require("../../models/carts.model.js");
 
 class CartsMongoDao {
