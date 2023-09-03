@@ -1,0 +1,7 @@
+http: GET en /api/logger/loggerTest - 20:46:34
+debug: Debug message
+http: HTTP message
+info: Info message
+warning: Warning message
+error: Error message
+http: GET en /favicon.ico - 20:46:34
