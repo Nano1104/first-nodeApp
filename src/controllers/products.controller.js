@@ -1,4 +1,4 @@
-const  {ProductsServiceDao } = require("../repository/index.js");
+const  { ProductsServiceDao } = require("../services/index.js");
 const productsModel = require("../models/products.model.js");
 
 class ProductsController {

@@ -6,14 +6,23 @@
 				"quantity": 6
 			},
 			{
-				"product": "3",
+				"product": 5,
+				"quantity": 1
+			},
+			{
+				"product": 4,
 				"quantity": 2
 			}
 		],
 		"id": 1
 	},
 	{
-		"products": [],
+		"products": [
+			{
+				"product": 5,
+				"quantity": 1
+			}
+		],
 		"id": 2
 	},
 	{
@@ -23,5 +32,9 @@
 	{
 		"products": [],
 		"id": 4
+	},
+	{
+		"products": [],
+		"id": 5
 	}
 ]

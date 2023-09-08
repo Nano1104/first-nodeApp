@@ -1,15 +1,5 @@
 [
 	{
-		"title": "Milk",
-		"description": "Tasty Drink",
-		"price": 50,
-		"status": false,
-		"stock": 100,
-		"category": "DRINK",
-		"id": 3,
-		"code": "JJK"
-	},
-	{
 		"title": "Chocolate",
 		"description": "Sweet candy",
 		"price": 50,
@@ -24,13 +14,13 @@
 		"code": "FKF"
 	},
 	{
-		"title": "Juice",
-		"description": "Fresh Drink",
-		"price": 10,
-		"status": true,
-		"stock": 75,
+		"title": "Milk",
+		"description": "Sweet Drink",
+		"price": 50,
+		"stock": 20,
 		"category": "DRINK",
-		"id": 5,
-		"code": "TTT"
+		"status": true,
+		"id": 6,
+		"code": "JJK"
 	}
 ]

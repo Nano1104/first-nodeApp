@@ -1,5 +1,6 @@
 const { Router } = require("express");
 const { authRole } = require("../middleware/auth_role.js")
+const { passportCall } = require("../utils/passportcall.js");
 
 //TRAEMOS EL PRODUCT MANAGER PARA HACER USO DE SUS METODOS
 const ProductsController = require("../controllers/products.controller.js");
@@ -21,13 +22,13 @@ class ProdsRouter {
         this.router.get(`${this.path}/:pid`, this.prodsController.getProductById)
 
         //////////////////////////////// ADD PRODUCT
-        this.router.post(`${this.path}`, authRole('user'), this.prodsController.createProduct) 
+        this.router.post(`${this.path}`, [passportCall('jwt'), authRole('user')], this.prodsController.createProduct) 
 
         //////////////////////////////// UPDATE PRODUCT
-        this.router.put(`${this.path}/:pid`, authRole('admin'), this.prodsController.updateProduct)
+        this.router.put(`${this.path}/:pid`, [passportCall('jwt'), authRole('admin')], this.prodsController.updateProduct)
 
         //////////////////////////////// DELETE PRODUCT
-        this.router.delete(`${this.path}/:pid`, authRole('admin'), this.prodsController.deleteProduct)
+        this.router.delete(`${this.path}/:pid`, [passportCall('jwt'), authRole('admin')], this.prodsController.deleteProduct)
 
     }
 }

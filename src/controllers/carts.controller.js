@@ -1,4 +1,4 @@
-const { CartsServiceDao } = require("../repository/index.js");
+const { CartsServiceDao } = require("../services/index.js");
 
 class CartsController {
     cartsService;
@@ -78,14 +78,23 @@ class CartsController {
     }
 
     updateProdQuantityInCart = async (req, res) => {
-        const cartId = req.params.cid
-        const prodId = req.params.pid
-        const newQuantity = req.body
+        const cartId = req.params.cid;
+        const prodId = req.params.pid;
+        const newQuantity = req.body;
         try {
-            await this.manager.putProductInCart(cartId, prodId, newQuantity)
+            await this.cartsService.updateProdQuantityInCart(cartId, prodId, newQuantity)
             res.status(200).json({message: `Product: ${prodId} updated successfully in cart: ${cartId}`})
         } catch (err) {
             res.status(400).json({message: `Error updating product quantity in cart: ${cartId}`, err: err})
+        }
+    }
+
+    finishPurchase = async (req, res) => {
+        try {
+            await this.cartsService.finishPurchase(req.params.cid, req.user.user)    //pasamos el id del cart y el user de la session para usar su email en el ticket
+            res.status(200).json({message: `Purchase finished successfully`})
+        } catch (err) {
+            res.status(400).json({message: `Error finishing purchase`})
         }
     }
 }

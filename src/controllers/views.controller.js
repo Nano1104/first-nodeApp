@@ -1,10 +1,11 @@
 
-const ProductsService = require('../services/products.service.js');
-const CartsService = require('../services/carts.service.js');
+const { ProductsServiceDao, CartsServiceDao } = require('../services/index.js');;
 
 class ViewsController {
-    productsService = new ProductsService();
-    cartsService = new CartsService();
+    constructor() {
+        this.productsService = ProductsServiceDao;
+        this.cartsService = CartsServiceDao
+    }
 
     renderProducts = async(req, res) => {
         try {
