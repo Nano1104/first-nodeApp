@@ -24,6 +24,7 @@ const {
 module.exports = {
     API_VERSION,
     NODE_ENV,
+    PORT,
     DB_CNN,
     DB_HOST,
     DB_PORT,

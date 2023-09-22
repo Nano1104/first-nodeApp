@@ -11,7 +11,8 @@ class SessionController {
             const findUser = await userModel.findOne({ email })
 
             if(!findUser) return res.status(401).json({message: "User not found"})    //valida si el user ya existe    
-            if(!isValidPassword(findUser, password)) return res.status(401).json({message: "password incorrect"})        //o si la contraseña es incorrecta     
+            /* if(!isValidPassword(findUser, password)) return res.status(401).json({message: "password incorrect"})        //o si la contraseña es incorrecta     
+            console.log(!isValidPassword(findUser, password)) */
             
             const token = generateToken(findUser)
             console.log(token)
@@ -24,7 +25,7 @@ class SessionController {
     }
 
     ////////////////////////////////////// REGISTER
-    sessionRegister = async(req, res) => {
+    sessionRegister = async (req, res) => {
         try {
             const { email, password, role } = req.body;
             if(!email) throw 'Error validation failed'
@@ -34,9 +35,8 @@ class SessionController {
                 password: createHash(password)
             }
 
-            if(!role) userToAdd.role = "public"
-
-            await userModel.create(userToAdd)
+            if(!role) userToAdd.role = "user"
+            await userModel.create({ ...userToAdd })
             res.render("login")                //redirige al login luego de haberse registrado
         } catch (err) {
             res.render("failregister"); 
