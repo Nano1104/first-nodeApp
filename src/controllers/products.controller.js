@@ -66,8 +66,8 @@ class ProductsController {
     createProduct = async (req, res) => {
         try {
             const product = req.body
-            await this.productsService.createProduct(product)
-            res.status(200).json({message: "Product added successfully"})
+            const productAdded = await this.productsService.createProduct(product)
+            res.status(200).json({message: "Product added successfully", result: productAdded})
         } catch(err) {
             res.status(400).json({message: "Error creating product, some fields may be empty", err: err})
         }

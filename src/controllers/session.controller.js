@@ -18,9 +18,9 @@ class SessionController {
             console.log(token)
             res.cookie('userToken', token, { httpOnly: true });
 
-            res.json({message: "Token generado", token})
+            res.json({message: "User login successfully with Token", token: token})
         } catch (err) {
-            res.status(500).json({ message: "Internal Server Error", error: err });
+            res.status(500).json({ message: "Error login User", error: err });
         }
     }
 
@@ -36,10 +36,12 @@ class SessionController {
             }
 
             if(!role) userToAdd.role = "user"
-            await userModel.create({ ...userToAdd })
-            res.render("login")                //redirige al login luego de haberse registrado
+            const user = await userModel.create({ ...userToAdd })
+            res.status(200).json({ message: "Successful register", user })
+            /* res.render("login")   */              
         } catch (err) {
-            res.render("failregister"); 
+            res.status(500).json({ message: "Registration failed", error: err });
+            /* res.render("failregister");  */
         }
     }
 

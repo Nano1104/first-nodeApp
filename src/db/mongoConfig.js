@@ -1,4 +1,4 @@
-const { connect } = require('mongoose');
+const { connect, disconnect } = require('mongoose');
 
 const { DB_HOST, DB_PORT, DB_NAME, DB_CNN, PERSISTANCE } = require('../config/config');
 
@@ -22,7 +22,19 @@ const mongoDBConnection = async () => {
     }
 }
 
+const disconnectDB = async () => {
+    try {
+        await disconnect()
+        console.log(`========================================`)
+        console.log(`======== Disconnected from MongoDB ===========`)
+        console.log(`========================================`)
+    } catch (err) {
+        console.log("Failed disconnecting from MongoDB", err);
+    }
+}
+
 module.exports = {
-    mongoDBConnection
+    mongoDBConnection,
+    disconnectDB
 }
 
