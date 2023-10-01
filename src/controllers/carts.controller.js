@@ -26,8 +26,8 @@ class CartsController {
 
     creatCart = async (req, res) => {
         try {
-            await this.cartsService.creatCart()
-            res.status(200).json({message: "Cart created successfully"})
+            const cart = await this.cartsService.creatCart()
+            res.status(200).json({message: "Cart created successfully", newCart: cart})
         } catch (err) {
             res.status(400).json({message: "Erro creating cart", err: err})
         }
@@ -38,8 +38,8 @@ class CartsController {
         const prodId = req.params.pid
         try {
             await this.cartsService.postProductInCart(cartId, prodId)
-            const cartModified = await this.cartsService.getCartById(cartId)
-            res.status(200).json({message: `Product added successfully in cart: ${cartId}`, cartModified})
+            const cart = await this.cartsService.getCartById(cartId)
+            res.status(200).json({message: `Product added successfully in cart: ${cartId}`, cart})
         } catch (err) {
             res.status(400).json({message: `Error posting product in cart: ${cartId}`, err: err})
         }
@@ -59,8 +59,8 @@ class CartsController {
     deleteProductsFromCart = async (req, res) => {
         const cartId = req.params.cid
         try {
-            await this.cartsService.deleteProductsFromCart(cartId) 
-            res.status(200).json({message: `Products deleted successfully from cart ${cartId}`})
+            const cart = await this.cartsService.deleteProductsFromCart(cartId) 
+            res.status(200).json({message: `Products deleted successfully from cart ${cartId}`, result: cart})
         } catch (err) {
             res.status(400).json({message: `Error deleting prods from cart: ${cartId}`, err: err})
         }

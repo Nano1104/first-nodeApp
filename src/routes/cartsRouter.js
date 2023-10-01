@@ -33,7 +33,7 @@ class CartsRouter {
         this.router.delete(`${this.path}/:cid/products/:pid`, this.cartsController.deleteProductFromCart)
 
         //////////////////////////////// DELETE ALL PRODUCTS FROM CART (cid)
-        this.router.delete(`${this.path}/:cid/`, this.cartsController.deleteProductsFromCart)
+        this.router.delete(`${this.path}/:cid`, this.cartsController.deleteProductsFromCart)
 
         //////////////////////////////// UPDATE PRODUCTS IN CART (cid)
         this.router.put(`${this.path}/:cid`, this.cartsController.putProductsInCart)

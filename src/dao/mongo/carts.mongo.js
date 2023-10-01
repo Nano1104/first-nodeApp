@@ -22,7 +22,8 @@ class CartsMongoDao {
         const newCart = {
             products: []
         }
-        await cartsModel.create({ ...newCart })
+        const result = await cartsModel.create({ ...newCart })
+        return result
     }
 
     postProductInCart = async (cid, pid) => {
@@ -63,6 +64,8 @@ class CartsMongoDao {
 
     deleteProductsFromCart = async (cid) => {
         await cartsModel.findByIdAndUpdate(cid, { products: []})
+        const emptyCart = await this.getCartById(cid)
+        return emptyCart
     }
 
     putProductsInCart = async (cid, arrProds) => {
