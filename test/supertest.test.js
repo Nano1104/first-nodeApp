@@ -6,6 +6,9 @@ const { expect } = require("chai");
 const { PORT, KEY_TOKEN } = require("../src/config/config.js");
 const { mongoDBConnection, disconnectDB } = require('../src/db/mongoConfig.js');
 
+//# MOCKS
+const { testProd, testUser, testAdmin } = require("./testMocks.js");
+
 //# MODELS
 const productsModel = require("../src/models/products.model.js");
 const cartsModel = require("../src/models/carts.model.js");
@@ -17,16 +20,7 @@ const PRODS_URL = "/api/products"
 const CARTS_URL = "/api/carts"
 const SESSION_URL = "/api/session"
 
-//# MOCKS
-const testProd = {
-    title: "air max 270",
-    description: "nike sneaker",
-    code: "JDH",
-    price: 160,
-    stock: 10,
-    category: "SHIRT"
-}
-
+//TESTING
 describe('App Testing', () => {
     let requester;
     before(() => {
@@ -43,54 +37,37 @@ describe('App Testing', () => {
            await userModel.deleteMany({})
         })
 
-        it.only('POST api/products if the user has role "USER" should create a product with status 200', async () => {
+        it('POST api/products if the user has role "USER" should create a product with status 200', async () => {
             //# 1~ hacemos un register para luego hacer el login
-            const mockRegister = {
-                first_name: "mariano",
-                last_name: "fernandez",
-                age: 19,
-                email: "mariannfer04@gmail.com",
-                phone: 1128483938,
-                password: '123',
-            }
-            const { _body: bodyRegister } = await requester.post(`${SESSION_URL}/register`).send(mockRegister)
-            console.log(bodyRegister)
+            const { _body: bodyRegister } = await requester.post(`${SESSION_URL}/register`).send(testUser)
             
             //# 2~ hacemos el login con los datos del register para asi obtener el token
-            const mockLogin = {
+            const userLogin = {
                 email: bodyRegister.user.email,
                 password: bodyRegister.user.password
             }
-            const { _body: bodyLogin } = await requester.post(`${SESSION_URL}/login`).send(mockLogin)
-            console.log(bodyLogin.token)
+            const { _body: bodyLogin } = await requester.post(`${SESSION_URL}/login`).send(userLogin)
 
             //# 3~ creamos un prod y ahora lo creamos con el token generado para el permiso en la route
-            const mockProd = {
-                title: "air max 270",
-                description: "nike sneaker",
-                code: "JDH",
-                price: 160,
-                stock: 10,
-                category: "SHIRT"
-            }
-
-            const { statusCode, ok, _body } = await requester.post(`${PRODS_URL}`)
-                                                                    .set('Cookie', [`'userToken'=${bodyLogin.token}`])
-                                                                    .send(mockProd);
-            console.log(_body)
+            const { statusCode, _body } = await requester.post(`${PRODS_URL}`).send(testProd)
+                                                                                  .set('Cookie', `userToken=${bodyLogin.token}`)
+            expect(statusCode).to.be.eq(200)
+            expect(_body.message).to.be.eq("Product added successfully")
+            expect(_body.result).to.have.property("_id")
         })
 
         it('GET api/products/:pid should get product by Id with status 200', async () => {
-            //# 1~ agregamos un prod a la db de prueba
-            const mockProd = {
-                title: "air max 270",
-                description: "nike sneaker",
-                code: "JDH",
-                price: 160,
-                stock: 10,
-                category: "SHIRT"
+            //# 1~ registramos e iniciamos sesion con un usuario con role "USER" para poder agregar un prod a la db
+            //register
+            const { _body: bodyRegister } = await requester.post(`${SESSION_URL}/register`).send(testUser)
+            //login
+            const userLogin = {
+                email: bodyRegister.user.email,
+                password: bodyRegister.user.password
             }
-            const { _body: prodAddedBody } = await requester.post(`${PRODS_URL}`).send(mockProd)
+            const { _body: bodyLogin } = await requester.post(`${SESSION_URL}/login`).send(userLogin)
+            const { _body: prodAddedBody } = await requester.post(`${PRODS_URL}`).send(testProd)
+                                                                                 .set('Cookie', `userToken=${bodyLogin.token}`)
             expect(prodAddedBody).to.be.ok
             expect(prodAddedBody.result).to.have.property('_id')
 
@@ -102,24 +79,43 @@ describe('App Testing', () => {
             expect(prodFoundBody.product).to.have.property('_id')
         })
 
-        it('DELETE api/products/:pid should delete product by Id with status 200', async () => {
-            //# 1~ agregamos un prod a la db de prueba
-            const mockProd = {
-                title: "air max 270",
-                description: "nike sneaker",
-                code: "JDH",
-                price: 160,
-                stock: 10,
-                category: "SHIRT"
+        it('DELETE api/products/:pid if the user has "ADMIN" role should delete product by Id with status 200', async () => {
+            //# 1~ registramos e iniciamos sesion con un usuario con role "USER" para poder agregar un prod a la db
+            const { _body: bodyRegister } = await requester.post(`${SESSION_URL}/register`).send(testUser)
+            //login
+            const userLogin = {
+                email: bodyRegister.user.email,
+                password: bodyRegister.user.password
             }
-            const { _body: prodAddedBody } = await requester.post(`${PRODS_URL}`).send(mockProd)
-            expect(prodAddedBody.result).to.be.ok
-            expect(prodAddedBody.result).to.have.property('_id')
-
-            //# 2~ con el id del prod agregado, lo eliminamos de la db
+            const { _body: bodyLogin } = await requester.post(`${SESSION_URL}/login`).send(userLogin)
+            //product added
+            const { statusCode, ok, _body: prodAddedBody } = await requester.post(`${PRODS_URL}`)
+                                                                    .set('Cookie', `userToken=${bodyLogin.token}`)
+                                                                    .send(testProd);
+            expect(statusCode).to.be.eq(200)
+            expect(prodAddedBody.message).to.be.eq("Product added successfully")
+            expect(prodAddedBody.result).to.have.property("_id")
             const prodIdToFind = prodAddedBody.result._id
-            const { _body: prodDeletedBody } = await requester.delete(`${PRODS_URL}/${prodIdToFind}`)
-            expect(prodDeletedBody.message).to.be.eq("Product deleted successfully hola")
+
+            //# 2~ ahora registraremos e iniciaremos sesion con un usuario con role "ADMIN"
+            const { _body: adminRegisterBody } = await requester.post(`${SESSION_URL}/register`).send(testAdmin)
+            expect(adminRegisterBody.message).to.be.eq("Successful register")
+            expect(adminRegisterBody.user).to.have.property("email")
+            expect(adminRegisterBody.user.email).to.be.eq("adminCoder@hotmail.com")
+
+            const adminLogin = {
+                email: adminRegisterBody.user.email,
+                password: adminRegisterBody.user.password
+            }
+            const { _body: adminLoginBody } = await requester.post(`${SESSION_URL}/login`).send(adminLogin)
+            expect(adminLoginBody.message).to.be.eq("User login successfully with Token")
+            expect(adminLoginBody.token).to.not.be.undefined
+
+            //# 3~ Ahora con el token generado para el ADMIN, podremos eliminar el prod de la db
+            const { statusCode: statusDelete, _body: prodDeletedBody } = await requester.delete(`${PRODS_URL}/${prodIdToFind}`)
+                                                              .set('Cookie', `userToken=${adminLoginBody.token}`)
+            expect(statusDelete).to.be.eq(200)
+            expect(prodDeletedBody.message).to.be.eq("Product deleted successfully")
         })
     })
 
@@ -128,6 +124,7 @@ describe('App Testing', () => {
         afterEach(async () => {
             await cartsModel.deleteMany({})
             await productsModel.deleteMany({})
+            await userModel.deleteMany({})
         })
 
         it('POST api/:cid/products/:pid should post a ceartain product in a certain cart with status 200', async () => {
@@ -137,11 +134,22 @@ describe('App Testing', () => {
             expect(cartCreatedBody.message).to.be.eq("Cart created successfully")
             const cartId = cartCreatedBody.newCart._id
 
-            //# 2~ creamos un prod en la db y accedemos a su _id
-            const { _body: prodCreatedBody } = await requester.post(`${PRODS_URL}`).send(testProd)
-            expect(prodCreatedBody.result).to.be.ok
-            expect(prodCreatedBody.result).to.have.property("_id")
-            const prodId = prodCreatedBody.result._id
+            //# 2~ registramos e iniciamos session con un user para agregar un prod a la db
+            //register
+            const { _body: bodyRegister } = await requester.post(`${SESSION_URL}/register`).send(testUser)
+            //login
+            const userLogin = {
+                email: bodyRegister.user.email,
+                password: bodyRegister.user.password
+            }
+            const { _body: bodyLogin } = await requester.post(`${SESSION_URL}/login`).send(userLogin)
+
+            const { _body: prodAddedBody } = await requester.post(`${PRODS_URL}`)
+                                                                    .set('Cookie', `userToken=${bodyLogin.token}`)
+                                                                    .send(testProd);
+            expect(prodAddedBody.result).to.be.ok
+            expect(prodAddedBody.result).to.have.property("_id")
+            const prodId = prodAddedBody.result._id
 
             //# 3~ agregamos el prod creado al carrito
             const { _body: cartModified } = await requester.post(`${CARTS_URL}/${cartId}/products/${prodId}`)
@@ -171,11 +179,22 @@ describe('App Testing', () => {
             expect(cartCreatedBody.message).to.be.eq("Cart created successfully")
             const cartId = cartCreatedBody.newCart._id
 
-            //# 2~ creamos un prod en la db y accedemos a su _id
-            const { _body: prodCreatedBody } = await requester.post(`${PRODS_URL}`).send(testProd)
-            expect(prodCreatedBody.result).to.be.ok
-            expect(prodCreatedBody.result).to.have.property("_id")
-            const prodId = prodCreatedBody.result._id
+            //# 2~ registramos e iniciamos session con un user para agregar un prod a la db y acceder a su _id
+            //register
+            const { _body: bodyRegister } = await requester.post(`${SESSION_URL}/register`).send(testUser)
+            //login
+            const userLogin = {
+                email: bodyRegister.user.email,
+                password: bodyRegister.user.password
+            }
+            const { _body: bodyLogin } = await requester.post(`${SESSION_URL}/login`).send(userLogin)
+            expect(bodyLogin).to.be.ok
+            const { _body: prodAddedBody } = await requester.post(`${PRODS_URL}`)
+                                                                    .set('Cookie', `userToken=${bodyLogin.token}`)
+                                                                    .send(testProd);
+            expect(prodAddedBody.result).to.be.ok
+            expect(prodAddedBody.result).to.have.property("_id")
+            const prodId = prodAddedBody.result._id
 
             //# 3~ agregamos el prod creado al carrito
             const { _body: cartModified } = await requester.post(`${CARTS_URL}/${cartId}/products/${prodId}`)
@@ -193,10 +212,55 @@ describe('App Testing', () => {
 
     ///////////////////////////////////
     describe('Sessions Router Testing', () => {
+        afterEach(async () => {
+            await productsModel.deleteMany({})
+            await userModel.deleteMany({})
+         })
         
+        it('POST api/session/register should not register user without first_name with status 500', async () => {
+            const registerMock = {
+                age: 19,
+                email: "mariannfer04@gmail.com",
+                phone: 1128483938,
+                password: '123',
+            }
+            const { statusCode, _body: bodyRegister } = await requester.post(`${SESSION_URL}/register`).send(registerMock)
+            expect(statusCode).to.be.eq(500)
+            expect(bodyRegister.message).to.be.eq("Registration failed")
+            expect(bodyRegister.error).to.be.ok
+        })
+
+        it('POST api/session/register should not register user with existing email with status 500', async () => {
+            //# 1~ hacemos un register
+            const { _body: bodyRegister } = await requester.post(`${SESSION_URL}/register`).send(testUser)
+
+            //# 2~ hacemos nuevamente un register que tenga el mismo email
+            const { statusCode, _body: bodyRegister2 } = await requester.post(`${SESSION_URL}/register`).send(testUser)
+            expect(statusCode).to.be.eq(500)
+            expect(bodyRegister2.message).to.be.eq("Registration failed")
+            expect(bodyRegister2.error).to.be.ok
+        })
+
+        it('POST api/session/login should not login user with different password status 500', async () => {
+            //# 1~ hacemos un register para luego hacer el login
+            const { _body: bodyRegister } = await requester.post(`${SESSION_URL}/register`).send(testUser)
+            expect(bodyRegister.message).to.be.eq("Successful register")
+
+            //# 2~ hacemos el login con un email que no existe
+            const mockLogin = {
+                email: bodyRegister.user.email,
+                password: '123-coder'
+            }
+            const { statusCode, _body: bodyLogin } = await requester.post(`${SESSION_URL}/login`).send(mockLogin)
+            expect(statusCode).to.be.eq(401)
+            expect(bodyLogin.message).to.be.ok
+            expect(bodyLogin.message).to.be.eq("password incorrect")
+        })
     })
 }) 
 
 
 
 /* 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 */
+
+

@@ -13,7 +13,7 @@ const { setLogger } = require("./utils/logger.js");
 ///ENV VARIBALES
 const { NODE_ENV, PORT, DB_HOST, DB_NAME, DB_PORT, DB_CNN } = require('./config/config.js');
 
-//TRAEMOS EL MANAGER DE LOS MENSAJES PARA PODER TRABAJAR CON ELLOS EN EL CHAT
+//TRAEMOS EL MANAGER DE LOS MENSAJES PARA PODER TRABAJAR CON ELLOS EN EL CHAT DE SOCKET
 const MessagesManager = require('./managers/messages.manager.js');
 
 class App {

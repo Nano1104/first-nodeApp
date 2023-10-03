@@ -1,4 +1,4 @@
-const { isValidPassword, createHash } = require("../utils/encrypt.js");
+const { createHash } = require("../utils/encrypt.js");
 const { generateToken } = require("../utils/jwt.js");
 
 const userModel = require("../models/userModel.js");
@@ -11,11 +11,9 @@ class SessionController {
             const findUser = await userModel.findOne({ email })
 
             if(!findUser) return res.status(401).json({message: "User not found"})    //valida si el user ya existe    
-            /* if(!isValidPassword(findUser, password)) return res.status(401).json({message: "password incorrect"})        //o si la contraseña es incorrecta     
-            console.log(!isValidPassword(findUser, password)) */
+            if(password != findUser.password) return res.status(401).json({message: "password incorrect"})        //o si la contraseña es incorrecta     
             
             const token = generateToken(findUser)
-            console.log(token)
             res.cookie('userToken', token, { httpOnly: true });
 
             res.json({message: "User login successfully with Token", token: token})
@@ -35,7 +33,11 @@ class SessionController {
                 password: createHash(password)
             }
 
+            //de lo contrario se le asigna "user"
             if(!role) userToAdd.role = "user"
+            // si cumple con los campos se le asigna el role de admin
+            if(email == "adminCoder@hotmail.com" && password == '12345') userToAdd.role = "admin" 
+
             const user = await userModel.create({ ...userToAdd })
             res.status(200).json({ message: "Successful register", user })
             /* res.render("login")   */              
