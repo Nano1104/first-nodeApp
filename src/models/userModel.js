@@ -21,10 +21,26 @@ const userSchema = new mongoose.Schema({
         type: String,
         unique: true
     },
+    documents: [
+        {
+            name: {
+              type: String,
+              required: true,
+            },
+            reference: {
+                type: String,
+                required: true,
+            },
+        },
+    ],
     role: {
         type: String,
         enum: ["user", "admin", "developer"],
         required: true
+    },
+    last_connection: {
+        type: Date,
+        default: Date.now
     }
 })
 

@@ -4,8 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start:dev": "cross-env NODE_ENV=development nodemon ./src/index.js",
-    "start:prod": "cross-env NODE_ENV=production nodemon ./src/index.js",
+    "start:dev": "cross-env NODE_ENV=development nodemon ./src/app.js",
+    "start:prod": "cross-env NODE_ENV=production nodemon ./src/app.js",
     "start:test": "mocha test/supertest.test.js"
   },
   "keywords": [],

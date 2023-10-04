@@ -3,7 +3,7 @@ const supertest = require("supertest");
 const { expect } = require("chai");
 
 //# VARIABLES
-const { PORT, KEY_TOKEN } = require("../src/config/config.js");
+const { PORT } = require("../src/config/config.js");
 const { mongoDBConnection, disconnectDB } = require('../src/db/mongoConfig.js');
 
 //# MOCKS
@@ -81,6 +81,7 @@ describe('App Testing', () => {
 
         it('DELETE api/products/:pid if the user has "ADMIN" role should delete product by Id with status 200', async () => {
             //# 1~ registramos e iniciamos sesion con un usuario con role "USER" para poder agregar un prod a la db
+            //register
             const { _body: bodyRegister } = await requester.post(`${SESSION_URL}/register`).send(testUser)
             //login
             const userLogin = {
@@ -88,7 +89,7 @@ describe('App Testing', () => {
                 password: bodyRegister.user.password
             }
             const { _body: bodyLogin } = await requester.post(`${SESSION_URL}/login`).send(userLogin)
-            //product added
+            //post prod
             const { statusCode, ok, _body: prodAddedBody } = await requester.post(`${PRODS_URL}`)
                                                                     .set('Cookie', `userToken=${bodyLogin.token}`)
                                                                     .send(testProd);
@@ -97,7 +98,7 @@ describe('App Testing', () => {
             expect(prodAddedBody.result).to.have.property("_id")
             const prodIdToFind = prodAddedBody.result._id
 
-            //# 2~ ahora registraremos e iniciaremos sesion con un usuario con role "ADMIN"
+            //# 2~ ahora registraremos e iniciaremos sesion con un usuario con role "ADMIN" para poder eliminar el prod
             const { _body: adminRegisterBody } = await requester.post(`${SESSION_URL}/register`).send(testAdmin)
             expect(adminRegisterBody.message).to.be.eq("Successful register")
             expect(adminRegisterBody.user).to.have.property("email")
@@ -260,7 +261,7 @@ describe('App Testing', () => {
 }) 
 
 
-
-/* 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 */
+/* Nano1104 */
+/* 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 Amigachos04 */
 
 

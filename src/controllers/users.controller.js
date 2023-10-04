@@ -1,4 +1,5 @@
 const UserDto = require("../dto/user.dto.js");
+const userModel = require("../models/userModel.js")
 
 class UserController {
     showCurrentUser = async (req, res) => {
@@ -7,6 +8,33 @@ class UserController {
             res.render("user", userData)
         } catch (err) {
             res.status(400).json({message: "Error showing user", err: err})
+        }
+    }
+
+    changeRole = async (req, res) => {
+        try {
+            const userId = req.params.uid
+            const userFound = await userModel.findById(userId)
+            if(!userFound) return res.status(401).json({message: "This user does not exist"})
+
+            if(userFound.role == "user") {
+                userFound.role = "premium"
+            } else {
+                userFound.role = "user"
+            }
+
+            await userModel.findByIdAndUpdate(userId, { role: userFound.role })
+            res.status(200).json({ message: "User premium change role", result })
+        } catch (err) {
+            res.status(400).json({ message: "Error changing premium role", error: err })
+        }
+    }
+
+    postDocument = async (req, res) => {
+        try {
+            
+        } catch (err) {
+            
         }
     }
 }

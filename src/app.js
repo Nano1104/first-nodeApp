@@ -13,6 +13,14 @@ const { setLogger } = require("./utils/logger.js");
 ///ENV VARIBALES
 const { NODE_ENV, PORT, DB_HOST, DB_NAME, DB_PORT, DB_CNN } = require('./config/config.js');
 
+//ROUTES
+const ProdsRouter = require('./routes/prodsRouter.js');
+const CartsRouter = require('./routes/cartsRouter.js');
+const ViewsRouter = require('./routes/viewsRouter.js');
+const SessionRouter = require('./routes/sessionRouter.js');
+const UsersRouter = require('./routes/usersRoutes.js');
+const LoggerRouter = require("./routes/logger.routes.js");
+
 //TRAEMOS EL MANAGER DE LOS MENSAJES PARA PODER TRABAJAR CON ELLOS EN EL CHAT DE SOCKET
 const MessagesManager = require('./managers/messages.manager.js');
 
@@ -88,6 +96,9 @@ class App {
 
 }
 
-module.exports = App
+
+//INCIALIZAMOS LA APP Y SUS ROUTES
+const app = new App([new ProdsRouter(), new CartsRouter(), new ViewsRouter(), new SessionRouter(), new UsersRouter(), new LoggerRouter()]);
+app.listen()
 
 

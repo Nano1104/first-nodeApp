@@ -4,8 +4,13 @@ const { generateToken } = require("../utils/jwt.js");
 const userModel = require("../models/userModel.js");
 
 class SessionController {
+    ////////////////////////////////////// LOGOUT
+    sessionLogout = async (req, res) => {
+
+    }
+
     ////////////////////////////////////// LOGIN
-    sessionLogin = async(req, res) => {
+    sessionLogin = async (req, res) => {
         try {
             const { email, password } = req.body; 
             const findUser = await userModel.findOne({ email })
@@ -13,6 +18,8 @@ class SessionController {
             if(!findUser) return res.status(401).json({message: "User not found"})    //valida si el user ya existe    
             if(password != findUser.password) return res.status(401).json({message: "password incorrect"})        //o si la contraseña es incorrecta     
             
+            await userModel.findByIdAndUpdate(findUser._id, { last_connection: new Date() })
+
             const token = generateToken(findUser)
             res.cookie('userToken', token, { httpOnly: true });
 
@@ -30,7 +37,7 @@ class SessionController {
             
             const userToAdd = {
                 ...req.body,
-                password: createHash(password)
+                /* password: createHash(password) */
             }
 
             //de lo contrario se le asigna "user"
@@ -39,7 +46,7 @@ class SessionController {
             if(email == "adminCoder@hotmail.com" && password == '12345') userToAdd.role = "admin" 
 
             const user = await userModel.create({ ...userToAdd })
-            res.status(200).json({ message: "Successful register", user })
+            await res.status(200).json({ message: "Successful register", user })
             /* res.render("login")   */              
         } catch (err) {
             res.status(500).json({ message: "Registration failed", error: err });
