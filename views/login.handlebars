@@ -1,6 +1,21 @@
-<form action="/api/session/login" method="post">
+{{!-- <form action="/api/session/login" method="post">
     <input type="text" name="email"  placeholder="Escriba su email"> 
     <input type="password" name="password" required placeholder="Escriba su contraseña">
     <input type="submit" value="LOGIN">
 </form>
-<a href="/api/session/github">ENTRAR CON GITHUB</a>
+<a href="/api/session/github">ENTRAR CON GITHUB</a> --}}
+
+<div class="container mt-5">
+        <form action="/api/session/login" method="post">
+            <div class="mb-3">
+                <input type="text" class="form-control" name="email" placeholder="Escriba su email">
+            </div>
+            <div class="mb-3">
+                <input type="password" class="form-control" name="password" required placeholder="Escriba su contraseña">
+            </div>
+            <button type="submit" class="btn btn-primary">LOGIN</button>
+        </form>
+        <div class="mt-3">
+            <a href="/api/session/github" class="btn btn-secondary">ENTRAR CON GITHUB</a>
+        </div>
+    </div>

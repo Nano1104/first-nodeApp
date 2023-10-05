@@ -2,6 +2,7 @@ const { isValidPassword, createHash } = require("../utils/encrypt.js");
 const { generateToken } = require("../utils/jwt.js");
 
 const userModel = require("../models/userModel.js");
+const cartsModel = require("../models/carts.model.js");
 
 class SessionController {
     ////////////////////////////////////// LOGOUT
@@ -44,13 +45,20 @@ class SessionController {
             if(!role) userToAdd.role = "user"
             // si cumple con los campos se le asigna el role de admin
             if(email == "adminCoder@hotmail.com" && password == '12345') userToAdd.role = "admin" 
+            //creamos el cart que tendra asociado el user
+            const newCart = {
+                products: []
+            }
+            const userCart = await cartsModel.create({ ...newCart })
+            userToAdd.cart = userCart
 
             const user = await userModel.create({ ...userToAdd })
-            await res.status(200).json({ message: "Successful register", user })
-            /* res.render("login")   */              
+            res.status(200).json({ message: "Successful register", user })   
+            /* res.render('login')   */
+            return user
         } catch (err) {
             res.status(500).json({ message: "Registration failed", error: err });
-            /* res.render("failregister");  */
+            /* res.render('failregister') */
         }
     }
 

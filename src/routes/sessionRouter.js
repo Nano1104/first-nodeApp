@@ -19,8 +19,8 @@ class SessionRouter {
         this.router.post(`${this.path}/login`, this.sessionController.sessionLogin); 
 
         //////////////////////////////// SESSION-REGISTER
-        this.router.post(`${this.path}/register`, this.sessionController.sessionRegister);
-
+        this.router.post(`${this.path}/register`, this.sessionController.sessionRegister)
+        
         //////////////////////////////// GITHUB
         this.router.get(`${this.path}/github`, passport.authenticate('github', {scope: ['user:email']}), async (req, res) => {})
 

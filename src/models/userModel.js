@@ -21,6 +21,10 @@ const userSchema = new mongoose.Schema({
         type: String,
         unique: true
     },
+    cart: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'carts'
+    },
     documents: [
         {
             name: {
@@ -43,6 +47,10 @@ const userSchema = new mongoose.Schema({
         default: Date.now
     }
 })
+
+/* userSchema.pre('find', () => {
+
+}) */
 
 const userModel = mongoose.model(userCollection, userSchema)
 module.exports = userModel

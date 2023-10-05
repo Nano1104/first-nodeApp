@@ -38,8 +38,8 @@ class CartsController {
         const prodId = req.params.pid
         try {
             await this.cartsService.postProductInCart(cartId, prodId)
-            const cart = await this.cartsService.getCartById(cartId)
-            res.status(200).json({message: `Product added successfully in cart: ${cartId}`, cart})
+            const cartModified = await this.cartsService.getCartById(cartId)
+            res.status(200).json({message: `Product added successfully in cart: ${cartId}`, cart: cartModified})
         } catch (err) {
             res.status(400).json({message: `Error posting product in cart: ${cartId}`, err: err})
         }

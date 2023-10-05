@@ -1,6 +1,7 @@
 const productsModel = require("../../models/products.model.js");
 const cartsModel = require("../../models/carts.model.js");
 const ticketModel = require("../../models/ticket.model.js");
+const userModel = require("../../models/userModel.js");
 
 class CartsMongoDao {
 
@@ -29,19 +30,21 @@ class CartsMongoDao {
     postProductInCart = async (cid, pid) => {
         const cart = await cartsModel.findById(cid)
         const prodToAdd = await productsModel.findById(pid)
-
-        if(prodToAdd) {                            //verifica que el product exista en la collection de products
+        const userOwner = await userModel.findOne({ cart: cart._id })
+ 
+        if(prodToAdd && userOwner) {          //verifica que el product exista en la collection de products y el carrito este asociado con un User
             const prodInCart = cart.products.find(prod => prod.product.toString() === pid)
             if(prodInCart) {                     //en caso de que el product ya estuviera agregado el el array products se suma en 1 su quantity
                 const index = cart.products.indexOf(prodInCart)
                 cart.products[index].quantity += 1
-                await cartsModel.findByIdAndUpdate(cid, {
+                const result = await cartsModel.findByIdAndUpdate(cid, {
                     products: [
                         ...cart.products
                     ]
                 })
+                await userModel.findByIdAndUpdate(userOwner._id, { cart: result })
             } else {                                        //si el product es nuevo en el array products se crea de la siguiente manera:
-                await cartsModel.findByIdAndUpdate(cid, {
+                const result = await cartsModel.findByIdAndUpdate(cid, {
                     products: [
                         ...cart.products,                   //reescribe el array de products con los prods anteriores mas el nuevo asi no se repiten
                         {
@@ -50,6 +53,7 @@ class CartsMongoDao {
                         }
                     ]
                 });
+                await userModel.findByIdAndUpdate(userOwner._id, { cart: result })
             }
         }
     }

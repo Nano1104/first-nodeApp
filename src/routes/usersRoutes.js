@@ -16,6 +16,8 @@ class UsersRouter {
     }
 
     initProdsRoutes() {
+        //////////////////////////////// GET USER BY ID
+        this.router.get(`${this.path}/:uid`, this.userController.getUserById);
 
         //////////////////////////////// CURRENT
         this.router.get(`${this.path}/current`, [passportCall('jwt'), authRole('admin')], this.userController.showCurrentUser); 
