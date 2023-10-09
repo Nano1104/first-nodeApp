@@ -1,11 +1,12 @@
-const swaggerOptions = {
+const swaggerOpts = {
     definition: {
-        openapi: '3.0.1',
-        info: {
-            title: "Swagger Documentation",
-            description: "App documentation",
-            version: "1.0.1"
-        }
+      openapi: '3.0.1',
+      info: {
+        title: 'Hello World',
+        version: '1.0.0',
+      },
     },
-    apis: [`.src/docs/**/*.yml`]
-}
+    apis: ['./src/docs/**/*.yml'], 
+  };
+
+module.exports = { swaggerOpts }

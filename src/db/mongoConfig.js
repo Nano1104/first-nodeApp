@@ -1,6 +1,6 @@
 const { connect, disconnect } = require('mongoose');
 
-const { DB_HOST, DB_PORT, DB_NAME, DB_CNN, PERSISTANCE } = require('../config/config');
+const { DB_HOST, DB_PORT, DB_NAME, DB_CNN } = require('../config/config');
 
 const configConnection = {
     url: DB_CNN ?? `mongodb://${DB_HOST}:${DB_PORT}/${DB_NAME}`,
@@ -12,9 +12,9 @@ const configConnection = {
 
 /////////////////////////////////// CONNECTION 
 const mongoDBConnection = async () => {
+    console.log(configConnection)
     try {
         await connect(configConnection.url, configConnection.options)
-        console.log(`========================================`)
         console.log(`======== Connected to MongoDB ===========`)
         console.log(`========================================`)
     } catch(err) {
@@ -27,7 +27,6 @@ const disconnectDB = async () => {
         await disconnect()
         console.log(`========================================`)
         console.log(`======== Disconnected from MongoDB ===========`)
-        console.log(`========================================`)
     } catch (err) {
         console.log("Failed disconnecting from MongoDB", err);
     }

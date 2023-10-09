@@ -10,9 +10,12 @@ const { initializePassport } = require('./config/passport.config');
 ///MIDDLEWARES
 const cookieParser = require('cookie-parser');
 const { setLogger } = require("./utils/logger.js");
+//DOCUMENTATION
+const swaggerJSDoc = require("swagger-jsdoc");
+const swaggerUi = require("swagger-ui-express");
+const swaggerOpts = require("./config/swagger.options.js");
 ///ENV VARIBALES
-const { NODE_ENV, PORT, DB_HOST, DB_NAME, DB_PORT, DB_CNN } = require('./config/config.js');
-
+const { NODE_ENV, PORT, PERSISTENCE } = require('./config/config.js');
 //ROUTES
 const ProdsRouter = require('./routes/prodsRouter.js');
 const CartsRouter = require('./routes/cartsRouter.js');
@@ -38,6 +41,7 @@ class App {
         
         this.initMiddlewares();
         this.initRoutes(routes);
+        /* this.initDocumentation() */
         this.initHandlebars();
     }
 
@@ -53,7 +57,7 @@ class App {
         this.app.use(cookieParser());
         initializePassport()
         this.app.use(passport.initialize());
-        this.app.use(setLogger);
+        this.app.use(setLogger)
     }
 
     initRoutes(routes) {
@@ -62,6 +66,11 @@ class App {
         });
     }
 
+    /* initDocumentation() {
+        const specs = swaggerJSDoc(swaggerOpts)
+        this.app.use('/api/docs', swaggerUi.serve, swaggerUi.setup(specs))
+    } */
+
     listen() {
         const io = new Server(
             this.app.listen(this.port, () => {
@@ -69,6 +78,7 @@ class App {
                 console.log(`========================================`)
                 console.log(`======== ENV: ${this.env} =======`)
                 console.log(`======== App listening on port ${this.port} =======`)
+                console.log(`======== PERSISTENCE: ${PERSISTENCE} =======`)
             })
         )
 

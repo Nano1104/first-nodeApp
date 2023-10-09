@@ -37,10 +37,9 @@ describe('App Testing', () => {
            await userModel.deleteMany({})
         })
 
-        it.only('POST api/products if the user has role "USER" should create a product with status 200', async () => {
+        it('POST api/products if the user has role "USER" should create a product with status 200', async () => {
             //# 1~ hacemos un register para luego hacer el login
             const { _body: bodyRegister } = await requester.post(`${SESSION_URL}/register`).send(testUser)
-            console.log(bodyRegister) /* <------------------------------- DEVUELVE UNDEFINED */
 
             //# 2~ hacemos el login con los datos del register para asi obtener el token
             const userLogin = {

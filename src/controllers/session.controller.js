@@ -24,7 +24,8 @@ class SessionController {
             const token = generateToken(findUser)
             res.cookie('userToken', token, { httpOnly: true });
 
-            res.json({message: "User login successfully with Token", token: token})
+            /* res.json({message: "User login successfully with Token", token: token}) */
+            res.redirect("/api/views/products")
         } catch (err) {
             res.status(500).json({ message: "Error login User", error: err });
         }
@@ -53,12 +54,11 @@ class SessionController {
             userToAdd.cart = userCart
 
             const user = await userModel.create({ ...userToAdd })
-            res.status(200).json({ message: "Successful register", user })   
-            /* res.render('login')   */
-            return user
+            /* res.status(200).json({ message: "Successful register", user })  */  
+            res.render('login')  
         } catch (err) {
-            res.status(500).json({ message: "Registration failed", error: err });
-            /* res.render('failregister') */
+            /* res.status(500).json({ message: "Registration failed", error: err }); */
+            res.render('failregister')
         }
     }
 
