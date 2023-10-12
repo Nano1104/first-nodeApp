@@ -41,7 +41,7 @@ class App {
         
         this.initMiddlewares();
         this.initRoutes(routes);
-        /* this.initDocumentation() */
+        this.initDocumentation()
         this.initHandlebars();
     }
 
@@ -66,10 +66,10 @@ class App {
         });
     }
 
-    /* initDocumentation() {
+    initDocumentation() {
         const specs = swaggerJSDoc(swaggerOpts)
         this.app.use('/api/docs', swaggerUi.serve, swaggerUi.setup(specs))
-    } */
+    }
 
     listen() {
         const io = new Server(
@@ -78,7 +78,7 @@ class App {
                 console.log(`========================================`)
                 console.log(`======== ENV: ${this.env} =======`)
                 console.log(`======== App listening on port ${this.port} =======`)
-                console.log(`======== PERSISTENCE: ${PERSISTENCE} =======`)
+                console.log(`======== PERSISTENCE: ${PERSISTENCE} =======`);
             })
         )
 

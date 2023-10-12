@@ -7,7 +7,8 @@ const cartsModel = require("../models/carts.model.js");
 class SessionController {
     ////////////////////////////////////// LOGOUT
     sessionLogout = async (req, res) => {
-
+        res.clearCookie('userToken')
+        res.redirect('/api/views/login')
     }
 
     ////////////////////////////////////// LOGIN
@@ -21,6 +22,14 @@ class SessionController {
             
             await userModel.findByIdAndUpdate(findUser._id, { last_connection: new Date() })
 
+            const cookiesToken = req.cookies.token;
+            /* if(!cookiesToken) {     //si no existe un token ya almacenado en las cookies, genera uno nuevo
+                const token = generateToken(findUser)
+                res.cookie('userToken', token, { httpOnly: true });
+                res.redirect("/api/views/products")
+            } else {
+                res.redirect("/api/users/current")
+            } */
             const token = generateToken(findUser)
             res.cookie('userToken', token, { httpOnly: true });
 
@@ -51,8 +60,8 @@ class SessionController {
                 products: []
             }
             const userCart = await cartsModel.create({ ...newCart })
-            userToAdd.cart = userCart
-
+            userToAdd.cart = userCart   //agregamos el cart creado al user
+            
             const user = await userModel.create({ ...userToAdd })
             /* res.status(200).json({ message: "Successful register", user })  */  
             res.render('login')  
@@ -70,10 +79,6 @@ class SessionController {
         } catch (err) {
             res.status(500).json({message: "Error login with github", error: err})
         }
-    }
-
-    renderLogin = async(req, res) => {
-        res.render("login");
     }
 
     renderFailLogin = async(req, res) => {

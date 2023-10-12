@@ -10,7 +10,8 @@ class ViewsController {
     renderProducts = async(req, res) => {
         try {
             const products = await this.productsService.getProducts();
-            res.render("products", {products});
+            const currentUser = req.user.user  //manda la data del user Logueado
+            res.render("products", {currentUser, products});
         } catch (err) {
             res.status(500).json({message: "Error rendering products"})
         }

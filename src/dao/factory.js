@@ -5,8 +5,7 @@ let Carts;
 
 const initializeAppPersistence = () => {
     switch(PERSISTENCE) {
-        case "MONGO":
-            console.log(`PERSISTENCE: ${PERSISTENCE}`);
+        case "mongo":
             mongoDBConnection();
             const ProductsMongoDao = require('./mongo/products.mongo.js');
             const CartsMongoDao = require("./mongo/carts.mongo.js");
@@ -15,7 +14,6 @@ const initializeAppPersistence = () => {
             break;
     
         default:
-            console.log(`PERSISTENCE: ${PERSISTENCE}`);
             const ProductsMemDao = require('./memory/products.memory.js');
             const CartsMemoDao = require("./memory/carts.memory.js");
             Products = new ProductsMemDao()

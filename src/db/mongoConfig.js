@@ -12,7 +12,6 @@ const configConnection = {
 
 /////////////////////////////////// CONNECTION 
 const mongoDBConnection = async () => {
-    console.log(configConnection)
     try {
         await connect(configConnection.url, configConnection.options)
         console.log(`======== Connected to MongoDB ===========`)

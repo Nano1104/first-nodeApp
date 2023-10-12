@@ -49,7 +49,7 @@ class ProductsController {
                 nextLink: hasNextPage ? `${baseURL}?page=${page + 1}` : null  
             })
         } catch (err) {
-            res.status(400).json({message: "Error getting product", err: err})
+            res.status(400).json({message: "Error getting products", err: err})
         }
     }
 
@@ -69,7 +69,7 @@ class ProductsController {
             const productAdded = await this.productsService.createProduct(product)
             res.status(200).json({message: "Product added successfully", result: productAdded})
         } catch(err) {
-            res.status(400).json({message: "Error creating product, some fields may be empty", err: err})
+            res.status(400).json({message: "Error creating product", err: err})
         }
     }
 

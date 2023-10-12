@@ -1,24 +1,24 @@
 
 
-{{#if this.email}}
+{{#if this.currentUser}}
     <div class="container">
     <div class="row justify-content-center">
         <div class="col-md-6">
         <div id="user-profile" class="text-center d-flex flex-column m-4">
             <div>
-                <h3>Usuario: {{this.first_name}} {{this.last_name}}</h3>
+                <h3>Usuario: {{this.currentUser.first_name}} {{this.currentUser.last_name}}</h3>
             </div>
             <div>
-                <strong>Edad: </strong><span>{{this.age}}</span>
+                <strong>Edad: </strong><span>{{this.currentUser.age}}</span>
             </div>
             <div>
-                <strong>Email: </strong><i>{{this.email}}</i>
+                <strong>Email: </strong><i>{{this.currentUser.email}}</i>
             </div>
             <div>
-                 <strong>Telefono: </strong><span>{{this.phone}}</span>
+                 <strong>Telefono: </strong><span>{{this.currentUser.phone}}</span>
             </div>
             <div>
-                <strong>Rol: </strong><span>{{this.role}}</span>
+                <strong>Rol: </strong><span>{{this.currentUser.role}}</span>
             </div>
             <form action="/api/session/logout" method="get">
             <input type="submit" value="CERRAR SESION" class="btn btn-warning">
@@ -37,7 +37,9 @@
                 <p>{{this.description}}</p>
                 <p>Precio: {{this.price}}</p>
                 <p>Categoría: {{this.category}}</p>
-                <button class="btn btn-primary">AGREGAR A CARRITO</button>
+                <form action="">
+                    <button type="submit" class="btn btn-primary" value={{this._id}}>AGREGAR A CARRITO</button>
+                </form>
             </div>
         {{/each}}
     {{else}}
@@ -45,7 +47,12 @@
     {{/if}}
 </div>
 
-
+<script src="/socket.io/socket.io.js"></script>
+<script src="/js/realTimeProds.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+<script>
+    $('.btn').click((e) => console.log(e.target.value))
+</script>
 
 
 

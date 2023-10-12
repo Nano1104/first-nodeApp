@@ -1,0 +1,321 @@
+paths:
+  /api/carts:
+    get:
+      summary: Obtiene y muestra todos los carritos creados
+      tags:
+        - Carritos
+      responses:
+        "200":
+          description: "Success getting carts"
+          content:
+            application/json:
+              schema:
+                properties:
+                  message:
+                    type: string
+                  carts:
+                    type: array
+                    items:
+                      $ref: "#components/schemas/CartWithProducts"
+        "400":
+          description: "Error getting carts"
+    post:
+      summary: Crea un carrito nuevo
+      tags:
+        - Carritos
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#components/requestBodies/cartToAdd"
+      responses:
+        "200":
+          description: "Cart created successfully"
+          content:
+            application/json:
+              schema:
+                properties:
+                  message:
+                    type: string
+                  newCart:
+                    $ref: "#components/schemas/NewCart"
+        "400":
+          description: "Error creating cart"
+  /api/carts/{cid}:
+    get:
+      summary: Obtiene los productos que tenga el carrito del Id pasado por la URL
+      tags:
+        - Carritos
+      parameters:
+        - name: cid
+          in: path
+          required: true
+          description: Id del carrito a obtener sus productos
+          schema:
+            $type: ObjectId
+      responses:
+        "200":
+          description: "Success getting products from cart"
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                  cartProds:
+                    type: array
+                    items:
+                      $ref: "#components/schemas/ProductInCart"
+        "400":
+          description: "Error getting products from cart"
+    delete:
+      summary: Elimina todos los productos del carrito con el Id pasado por la URL
+      tags:
+        - Carritos
+      parameters:
+        - name: cid
+          in: path
+          required: true
+          description: Id del carrito a eliminar sus productos
+      responses:
+        "200":
+          description: "Products deleted successfully from cart"
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                  result:
+                    type: object
+                    properties:
+                      _id:
+                        type: string
+                      products:
+                        type: array
+                        example: []
+        "400":
+          description: "Error deleting prods from cart"
+    put:
+      summary: Actualiza los productos que esten en el carrito con el cid
+      tags:
+        - Carritos
+      parameters:
+        - name: cid
+          in: path
+          required: true
+          description: Id del carrito al cual actualizar sus productos
+      requestBody:
+        required: true
+        content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  products:
+                    type: array
+                    example: ["64a9fe95e9df5dd9e21a1347","64a9fe95e9df5dd9e21a1347"]
+      responses:
+        "200":
+          description: "Products updated successfully in cart"
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Products updated successfully in cart 652211347ecda3ce3b3edc77
+        "400":
+          description: "Error updating prods in cart"
+  /api/carts/{cid}/products/{pid}:
+    post:
+      summary: Agrega el producto que tenga el pid dentro del carrito con el cid
+      tags:
+        - Carritos
+      parameters:
+        - name: cid
+          in: path
+          required: true
+          description: Id del carrito al cual agregar el producto
+        - name: pid
+          in: path
+          required: true
+          description: Id del producto que se agregara al carrito
+      responses:
+        "200":
+          description: "Product added successfully in cart"
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                  cart:
+                    $ref: "#components/schemas/CartWithProducts"
+        "400":
+          description: "Error posting product in cart"
+    delete:
+      summary: Elimina el producto que tenga el pid del carrito que tenga el cid
+      tags:
+        - Carritos
+      parameters:
+        - name: cid
+          in: path
+          required: true
+          description: Id del carrito del cual eliminar el producto
+        - name: pid
+          in: path
+          required: true
+          description: Id del producto que se eliminara del carrito
+      responses:
+        "200":
+          description: "Product deleted from cart"
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+        "400":
+          description: "Error deleting product from cart"
+    put:
+      summary: Actualiza la cantidad del producto con el pid que este dentro del carrito con el cid
+      tags:
+        - Carritos
+      parameters:
+        - name: cid
+          in: path
+          required: true
+          description: Id del carrito del cual eliminar el producto
+        - name: pid
+          in: path
+          required: true
+          description: Id del producto que se eliminara del carrito
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                quantity: 
+                  type: number
+                  example: 5
+      responses:
+        "200":
+          description: "Product updated successfully in cart"
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Product 6522114d7ecda3ce3b3edc7f updated successfully in cart 652211347ecda3ce3b3edc77
+        "400":
+          description: "Error updating product quantity in cart"
+  /api/carts/{cid}/purchase:
+    post:
+      summary: Finaliza la compra de los productos que contenga el carrito con el cid
+      description: Para finalizar con la compra del carrito, el usuario debe estar logueado y cumplir con el role de "user" ademas de tener un JWT valido.
+      tags:
+        - Carritos
+      security:
+        - JWTTokenCookie: []
+      parameters:
+        - name: cid
+          in: path
+          required: true
+          description: Id del carrito del cual se obtendran sus productos para finalizar la compra
+      responses:
+        "200":
+          description: "Product updated successfully in cart"
+        "400":
+          description: "Error updating product quantity in cart"
+      
+        
+
+
+components:
+  schemas:
+    NewCart:
+      type: object
+      properties:
+        products:
+          type: array
+          description: Nuevo arreglo de productos que tendra el carrito, comienza vacio
+          example: []
+        _id:
+          type: objectId
+          description: Id autogenerado de MongoDB
+    ProductInCart:
+      type: object
+      properties:
+        product:
+          type: object
+          description: Producto agregado en el carrito
+          properties:
+            _id:
+              type: ObjectId
+              description: Id autogenerado de MongoDB
+            title:
+              type: string
+              description: Nombre del producto
+            description:
+              type: string
+              description: Descripcion del producto
+            code: 
+              type: string
+              description: Codigo único del producto
+            price: 
+              type: number
+              description: Precio del producto
+            stock: 
+              type: number
+              description: Cantidad disponible del producto
+            category: 
+              type: string
+              description: Tipo del producto
+              enum: ["SHIRT", "PANT", "SNEAKER", "HAT", "SHORT", "HOODIE", "JACKET"]
+            thumbnail: 
+              type: array
+              description: Id autogenerado de MongoDB
+        quantity:
+          type: number
+          description: Cantidad del producto en el carrito
+        _id:
+          type: ObjectId
+          description: Id autogenerado de MongoDB
+    CartWithProducts:
+      type: object
+      properties:
+        _id:
+          type: objectid
+          description: Id autogenerado por MongoDB
+        products:
+          type: array
+          description: Array de productos que tenga el carrito
+          items:
+            $ref: "#components/schemas/ProductInCart"
+  requestBodies:
+    cartToAdd:
+      type: object
+      properties:
+        products:
+          type: array
+          example: []
+  securitySchema: 
+    JWTTokenCookie:
+      type: apiKey
+      in: cookie
+      name: token
+          
+    
+        
+            

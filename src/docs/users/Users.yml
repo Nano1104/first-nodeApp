@@ -1,0 +1,23 @@
+paths:
+  /api/users/current:
+    get:
+      summary: Muestra la informacion del usuario de la sesion actual
+      description: Para mostrar la descripcion del usuario de la sesion actual, se debe tener un JWT valido almacenado en las cookies.
+      tags:
+        - Usuarios
+      security:
+        - JWTTokenCookie: []
+      responses:
+          "200":
+            description: "Success. The page or view will be displayed."
+          "400":
+            description: "Error showing user"
+
+
+components:
+  securitySchema: 
+    JWTTokenCookie:
+      type: apiKey
+      in: cookie
+      name: token
+    

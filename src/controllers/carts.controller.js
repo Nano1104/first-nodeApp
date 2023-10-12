@@ -29,7 +29,7 @@ class CartsController {
             const cart = await this.cartsService.creatCart()
             res.status(200).json({message: "Cart created successfully", newCart: cart})
         } catch (err) {
-            res.status(400).json({message: "Erro creating cart", err: err})
+            res.status(400).json({message: "Error creating cart", err: err})
         }
     }
 

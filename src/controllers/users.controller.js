@@ -4,6 +4,7 @@ const userModel = require("../models/userModel.js")
 class UserController {
     showCurrentUser = async (req, res) => {
         try {
+            if(!req.user.user) throw new Error("There's no current user");
             const userData = new UserDto(req.user.user)
             res.render("user", userData)
         } catch (err) {

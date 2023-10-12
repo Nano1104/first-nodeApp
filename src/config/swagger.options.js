@@ -2,11 +2,12 @@ const swaggerOpts = {
     definition: {
       openapi: '3.0.1',
       info: {
-        title: 'Hello World',
+        title: 'API Documentation with Swagger',
         version: '1.0.0',
       },
     },
-    apis: ['./src/docs/**/*.yml'], 
+    apis: [`./src/docs/**/*.yml`], 
   };
 
-module.exports = { swaggerOpts }
+module.exports = swaggerOpts
+

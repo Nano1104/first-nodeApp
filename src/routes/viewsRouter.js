@@ -1,5 +1,6 @@
 const { Router } = require('express');
 const { authRole } = require("../middleware/auth_role.js");
+const { passportCall } = require("../utils/passportcall.js");
 
 //TRAEMOS EL PRODUCT MANAGER PARA HACER USO DE SUS METODOS
 const ViewsController = require("../controllers/views.controller.js");
@@ -15,7 +16,7 @@ class ViewsRouter {
     }
 
     initRoutes() {
-        this.router.get(`${this.path}/products`, this.viewsController.renderProducts);
+        this.router.get(`${this.path}/products`, passportCall('jwt'), this.viewsController.renderProducts);
 
         this.router.get(`${this.path}/carts/:cid`, this.viewsController.renderCart);
 

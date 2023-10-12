@@ -17,10 +17,10 @@ class UsersRouter {
 
     initProdsRoutes() {
         //////////////////////////////// GET USER BY ID
-        this.router.get(`${this.path}/:uid`, this.userController.getUserById);
+        /* this.router.get(`${this.path}/:uid`, this.userController.getUserById); */
 
         //////////////////////////////// CURRENT
-        this.router.get(`${this.path}/current`, [passportCall('jwt'), authRole('admin')], this.userController.showCurrentUser); 
+        this.router.get(`${this.path}/current`, passportCall('jwt'), this.userController.showCurrentUser); 
 
         //////////////////////////////// PREMIUM USER
         this.router.get(`${this.path}/premium/:uid`, this.userController.changeRole)

@@ -1,0 +1,184 @@
+paths:
+  /api/products:
+    get:
+      summary: Obtienes todos los productos que haya almacenados
+      tags: 
+        - Productos
+      responses:
+        "200":
+          description: "Success getting all products from db"
+          content: 
+            application/json:
+              schema:
+                type: object
+                $ref: "#components/schemas/Product"
+        "400":
+          description: "Error getting all products from db"
+    post:
+      summary: Agrega un producto
+      description: Para agregar un nuevo producto, se requiere autenticación con un token JWT válido y tener el rol de "user".
+      tags: 
+        - Productos
+      security:
+        - JWTTokenCookie: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#components/requestBodies/prodToAdd"
+      responses:
+        "200":
+          description: "Product added successfully"
+          content: 
+            application/json:
+              schema:
+                type: object
+                $ref: "#components/schemas/Product"
+        "400":
+          description: "Error creating product"
+  /api/products/{pid}:
+    get:
+      summary: Obtiene un producto por el Id
+      tags: 
+        - Productos
+      parameters:
+        - name: pid
+          in: path
+          required: true
+          description: Id del producto que desea solicitar
+          schema:
+            $type: ObjectId
+      responses:
+        "200":
+          description: "Success getting product"
+          content: 
+            application/json:
+              schema:
+                type: object
+                $ref: "#components/schemas/Product"
+        "400":
+          description: "Error getting product"
+    put:
+      summary: Actualiza un producto por el Id
+      description: Para actualizar un producto, se requiere autenticación con un token JWT válido y tener el rol de "admin".
+      tags: 
+        - Productos
+      security:
+        - JWTTokenCookie: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#components/requestBodies/prodToAdd"
+      parameters:
+        - name: pid
+          in: path
+          required: true
+          description: Id del producto que desea actualizar
+          schema:
+            $type: ObjectId
+      responses:
+        "200":
+          description: "Product updated successfully"
+        "400":
+          description: "Error updating product"
+    delete:
+      summary: Elimina un producto por el Id
+      description: Para eliminar un producto, se requiere autenticación con un token JWT válido y tener el rol de "admin".
+      tags: 
+        - Productos
+      security:
+        - JWTTokenCookie: []
+      parameters:
+        - name: pid
+          in: path
+          required: true
+          description: Id del producto que desea actualizar
+          schema:
+            $type: ObjectId
+      responses:
+        "200":
+          description: "Product deleted successfully"
+        "400":
+          description: "Error deleting product"
+  
+    
+
+
+components:
+  schemas: 
+    Product:
+      type: object
+      properties:
+        _id: 
+          type: ObjectId
+          description: Id autogenerado de MongoDB
+        title: 
+          type: string
+          description: Nombre del producto
+        description: 
+          type: string
+          description: Descripcion del producto
+        code: 
+          type: string
+          description: Codigo único del producto
+        price: 
+          type: number
+          description: Precio del producto
+        stock: 
+          type: number
+          description: Cantidad disponible del producto
+        category: 
+          type: string
+          description: Tipo del producto
+          enum: ["SHIRT", "PANT", "SNEAKER", "HAT", "SHORT", "HOODIE", "JACKET"]
+        thumbnail: 
+          type: array
+          description: Id autogenerado de MongoDB
+      example:
+        _id: ObjectId('652211437ecda3ce3b3edc7d')
+        title: "air max 90"
+        description: "nike sneakers"
+        code: "add"
+        price: 170
+        stock: 12
+        category: "SNEAKER"
+        thumbnail: Array (empty)
+  requestBodies:
+    prodToAdd:
+      type: object
+      properties:
+        title: 
+          type: string
+          description: Nombre del producto
+        description: 
+          type: string
+          description: Descripcion del producto
+        code: 
+          type: string
+          description: Codigo único del producto
+        price: 
+          type: number
+          description: Precio del producto
+        stock: 
+          type: number
+          description: Cantidad disponible del producto
+        category: 
+          type: string
+          description: Tipo del producto
+          enum: ["SHIRT", "PANT", "SNEAKER", "HAT", "SHORT", "HOODIE", "JACKET"]
+      example:
+        title: "air max 90"
+        description: "nike sneakers"
+        code: "add"
+        price: 170
+        stock: 12
+        category: "SNEAKER"
+  securitySchema: 
+    JWTTokenCookie:
+      type: apiKey
+      in: cookie
+      name: token
+        

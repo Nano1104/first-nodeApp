@@ -14,6 +14,8 @@ class SessionRouter {
     }
 
     initProdsRoutes() {
+        //////////////////////////////// SESSION-LOGOUT
+        this.router.get(`${this.path}/logout`, this.sessionController.sessionLogout); 
 
         //////////////////////////////// SESSION-LOGIN
         this.router.post(`${this.path}/login`, this.sessionController.sessionLogin); 
@@ -25,9 +27,6 @@ class SessionRouter {
         this.router.get(`${this.path}/github`, passport.authenticate('github', {scope: ['user:email']}), async (req, res) => {})
 
         this.router.get(`${this.path}/github/callback`, passport.authenticate('github', {failureRedirect: `/api${this.path}/login`}), this.sessionController.sessionGithub)
-
-        //////////////////////////////// LOGIN
-        this.router.get(`${this.path}/login`, this.sessionController.renderLogin)
 
         //////////////////////////////// FAILREGISTER
         this.router.get(`${this.path}/faillogin`, this.sessionController.renderFailLogin)
