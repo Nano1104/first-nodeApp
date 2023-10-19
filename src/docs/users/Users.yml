@@ -2,16 +2,16 @@ paths:
   /api/users/current:
     get:
       summary: Muestra la informacion del usuario de la sesion actual
-      description: Para mostrar la descripcion del usuario de la sesion actual, se debe tener un JWT valido almacenado en las cookies.
+      description: Para mostrar la descripcion del usuario de la sesion actual, se debe tener un JWT valido almacenado en las cookies. En caso de que la respuesta sea exitosa se renderizara una vista con los datos del usuario
       tags:
         - Usuarios
       security:
         - JWTTokenCookie: []
       responses:
         "200":
-          description: "Success. The page or view will be displayed."
+          description: "Exito. La vista se renderizara para mostrar la informacion del usuario"
         "400":
-          description: "Error showing user"
+          description: "Mensaje de error al intentar mostrar la vista con los datos del usuario"
   /api/users/premium/{uid}:
     get:
       summary: Cambia el rol del usuario de "user" a "premium" o viceversa
@@ -19,12 +19,70 @@ paths:
         - Usuarios
       responses:
         "200":
-            description: "User change role"
+            description: "Retorna el mensaje y el resultado del usuario con el rol cambiado"
+            content:
+              application/json:
+                schema:
+                  type: object
+                  properties:
+                    message: 
+                      type: string
+                      example: User change role
+                    result:
+                      type: object
+                      $ref: "#components/schemas/User" 
+        "401":
+          description: "Mensaje de que el usuario al que se quiere cambiar el rol no se encontro"
         "400":
-          description: "Error changing premium role"
+          description: "Mensaje de error al intentar cambiar el rol al usuario"
 
 
 components:
+  schemas: 
+    User:
+      type: object
+      properties:
+        _id:
+          type: ObjectId
+          description: Id autogenerado de MongoDB
+          example: ObjectId('652211437ecda3ce3b3edc7d')
+        first_name:
+          type: string
+          description: Nombre del usuario
+          example: Bruno
+        last_name: 
+          type: string
+          description: Apellido del usuario
+          example: Acevedo
+        age:
+          type: number
+          description: Edad del usuario
+          example: 22
+        email:
+          type: string
+          description: Email del usuario
+          example: brunoacevedo04@hotmail.com
+        phone:
+          type: number
+          description: Numero de celular del usuario
+          example: 1103940321
+        password:
+          type: string
+          description: Contraseña del usuario
+          example: "$2b$10$DVIMRMehJtNwD6.4TsEAjuBUFVremOYah3.xuC08TxgZfASVVy/hy"
+        cart: 
+          type: ObjectId
+          description: Carrito del usuario
+          example: "ObjectId('652ef34a1d12ebc40970a877')"
+        role:
+          type: string
+          description: Rol que tenga el usuario
+          enum: ["user", "admin", "premium"]
+          example: "premium"
+        last_connection:
+          type: string
+          format: date
+          example: "2023-10-19T19:43:44.488+00:00"
   securitySchema: 
     JWTTokenCookie:
       type: apiKey

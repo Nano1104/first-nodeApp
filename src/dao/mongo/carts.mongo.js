@@ -114,24 +114,21 @@ class CartsMongoDao {
 
     finishPurchase = async (cid, user) => {
         const cart = await cartsModel.findById(cid);
-        const prodsNotAvailable = [];
+        const prodsNotAvailable = [];  //array para aquellos prods que no pueden ser comprados por no haber stock
         //ticket fields
-        let totalPurchase = 0
-        const generateCode = () => Math.random().toString(36).substring(2, 8);
+        let totalPurchase = 0  //total que se mostrara en el ticket
+        const generateCode = () => Math.random().toString(36).substring(2, 8);  //codigo unico auto-generado para el ticket
 
-        for(const prod of cart.products) {       //por cada producto que tenga el carrito
+        /* for(const prod of cart.products) {       //por cada producto que tenga el carrito
             const id = prod.product
             const prodFound = await productsModel.findById(id)            //encuentra cada prod por su id
             if(prodFound.stock >= prod.quantity) {                        //y resta del stock del producto
                 totalPurchase += (prodFound.price * prod.quantity)
-                await productsModel.findByIdAndUpdate(id, {
-                    ...prodFound,
-                    stock: prodFound.stock -= prod.quantity               //la cantidad del product del carrito
-                })
+                await productsModel.findByIdAndUpdate(id, { stock: prodFound.stock -= prod.quantity })              //la cantidad del product del carrito
             } else {                            //si el producto no se puede comprar por un tema de stock
                 prodsNotAvailable.push(prod)       //se agrega al array de productos no disponibles
             }
-        }
+        } */
 
         try {               //CREACION DEL TICKET
             await ticketModel.create({
@@ -144,10 +141,10 @@ class CartsMongoDao {
         }
 
         cart.products = []       //VACIAMOS EL CARRITO
-        for(const prod of prodsNotAvailable) {      //y agregamos todos los que no se pudieron comprar'
-            const leanProd = prod.toObject({ getters: true, virtuals: false });        //esta funcion se encarga de convertir cada prod en un objeto simple
-            cart.products.push(leanProd);                                              //ya que mongoose hara referencia como si cada prod fuera un doc nuevo
-        }                                                                              //y devolvera un resultado no deseado
+        /* for(const prod of prodsNotAvailable) {      //y agregamos todos los que no se pudieron comprar'
+            const leanProd = prod.toObject({ getters: true, virtuals: false });    //esta funcion se encarga de convertir cada prod en un objeto simple
+            cart.products.push(leanProd);                                          //ya que mongoose hara referencia como si cada prod fuera un doc nuevo
+        }         */                                                                //y devolvera cosas adicionales generando un resultado no deseado
         await cart.save();
     }
 }

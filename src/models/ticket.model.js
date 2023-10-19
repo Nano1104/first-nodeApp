@@ -12,10 +12,7 @@ const ticketSchema = new mongoose.Schema({
         default: Date.now
     },
     amount: Number,
-    purchaser: {
-        type: String,
-        unique: true
-    }
+    purchaser: String
 })
 
 const ticketModel = mongoose.model(ticketCollection, ticketSchema);

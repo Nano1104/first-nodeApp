@@ -1,5 +1,27 @@
-<div>
-    <h3>{{fullName}}</h3>
-    <p>{{age}}</p>
-    <strong>{{role}}</strong>
-</div>
+
+{{#if UserDto}}
+    <div class="container">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+        <div id="user-profile" class="text-center d-flex flex-column m-4">
+            <div>
+                <h3>Usuario: {{UserDto.fullName}}</h3>
+            </div>
+            <div>
+                <strong>Edad: </strong><span>{{UserDto.age}}</span>
+            </div>
+            <div>
+                <strong>Rol: </strong><span>{{UserDto.role}}</span>
+            </div>
+            <form action="/api/users/premium/{{UserDto.id}}" method="get">
+                <input type="submit" value="CAMBIAR DE ROLE" class="btn btn-success m-1">
+            </form>
+            <form action="/api/session/logout" method="get">
+                <input type="submit" value="CERRAR SESION" class="btn btn-warning m-1">
+            </form>
+            <a href="/api/views/products" class="btn btn-primary m-1">VER CATALOGO DE PRODUCTOS</a>
+        </div>
+        </div>
+    </div>
+    </div>
+{{/if}}

@@ -31,7 +31,7 @@ class SessionController {
             } else {
                 res.redirect("/api/views/products")
             } */
-            res.redirect("/api/views/private")
+            res.redirect("/api/users/current")
         } catch (err) {
             res.status(500).json({ message: "Error login User", error: err });
         }

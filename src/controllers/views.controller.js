@@ -18,8 +18,9 @@ class ViewsController {
 
     renderCart = async(req, res) => {
         try {
-            const cartProds = await this.cartsService.getCartProducts(req.params.cid)
-            res.render("cartProds", {cartProds});
+            const cartId = req.params.cid
+            const cartProds = await this.cartsService.getCartProducts(cartId)
+            res.render("cartProds", {cartId, cartProds});
         } catch (err) {
             res.status(500).json({message: `Error rendering products from cart: ${req.params.cid}`})
         }

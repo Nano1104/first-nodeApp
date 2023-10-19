@@ -44,7 +44,6 @@ fetch(`/api/products`, {
 .catch((err) => console.log("Error al hacer la solicitud POST:", err)) 
 
 
-
 /* MOSTRAR CARRITO */
 $("#cart")
     .click(() => {

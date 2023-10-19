@@ -2,10 +2,10 @@
 <div class="container">
   <div class="row">
     <div class="col-12 d-flex justify-content-center align-items-center text-center" style="height: 100vh;">
-      <div id="cartProds-container">
+      <div id="cartProds-container" data={{cartId}}>
         {{#if cartProds}}
           {{#each cartProds}}
-            <div class="prod-container" container-id="{{this.product._id}}">
+            <div id="prod-{{this.product._id}}" class="prod-container" container-id="{{this.product._id}}">
               <h2>{{this.product.title}}</h2>
               <p>{{this.product.description}}</p>
               <p id="price_{{this.product._id}}" price={{this.product.price}}>Precio: {{this.product.price}}</p>
@@ -14,11 +14,11 @@
             </div>
           {{/each}}
           <h3 class="btn btn-primary" id="btn-finishPurchase">TERMINAR COMPRA</h3>
-        {{else}}
-          <h3>Sorry, this Cart has no products</h3>
-          <a href="/api/views/products" class="btn btn-warning">VOLVER A PRODUCTOS</a>
-        {{/if}}
-      </div>
+        </div>
+      {{else}}
+        <h3>This Cart has no products</h3>
+        <a href="/api/views/products" class="btn btn-warning">VOLVER A PRODUCTOS</a>
+      {{/if}}
     </div>
   </div>
 </div>
@@ -27,33 +27,4 @@
 
 
 {{!---------------------- SCRIPT ----------------------}}
-<script>
-    let total = 0
-    const products = document.getElementsByClassName("prod-container")
-    for(const prod of products) {           //por cada producto
-      const prodId = prod.getAttribute("container-id")        //obtenemos su Id
-      
-      const quantityElement = document.getElementById(`quantity_${prodId}`)   //obtenemos su stock
-      const quantity = quantityElement.getAttribute("quantity")
-      
-      const priceElement = document.getElementById(`price_${prodId}`)   //obtenemos su precio
-      const price = priceElement.getAttribute("price")
-
-      for(let i = quantity; i > 0; i--) {        //por el stock de cada producto 
-        total += Number(price)
-      }
-    } 
-    
-    $('#btn-finishPurchase').click(() => {
-      Swal.fire({
-            title: 'Desea finalizar su compra?',
-            text: `Su total a pagar es: ${total}`,
-            showCancelButton: true,
-            confirmButtonText: 'Si',
-          }).then((result) => {
-            if (result.isConfirmed) {
-              Swal.fire('Su compra a finalizado', '', 'success')
-            }
-          }) 
-    }) 
-</script>
+<script src="/js/realTimeCartProds.js"></script> 
