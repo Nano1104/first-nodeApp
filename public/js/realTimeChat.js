@@ -1,9 +1,5 @@
 const socket = io();
 
-//traemos el manager de los mensajes para poder mostrarlos
-/* const MessagesManager = require('../../src/dao/managers/messages.manager');
-import MessagesManager from '../../src/dao/managers/messages.manager'; */
-/* const manager = new MessagesManager(); */
 let content;
 let user;
 const chatbox = document.getElementById('chatbox');
@@ -14,18 +10,18 @@ let messageContainer = document.getElementById('messages-container')
 Swal.fire({
     title: "IDENTIFICATION",
     input: 'text',
-    text: "Write your username",
+    text: "Ingrese su nombre",
     inputValidator: (val) => {
-        return !val && "Please enter a valid username"
+        return !val && "Porfavor ingrese un nombre valido"
     },
     allowOutsideClick: false,
     allowEscapeKey: false,
 }).then((result) => {
     user = result.value
-    socket.emit('new-user', user)
+    socket.emit('new-user', user)   
 });
 
-//evento del button send
+//evento para enviar el mensaje
 send.addEventListener('click', async () => {
     if(chatbox.value.trim().length > 0) {
         socket.emit('message', { user,  message: chatbox.value.trim() })
@@ -49,7 +45,8 @@ socket.on('server-messages', data => {
     }
 })
 
-//cartel de cuando se une alguien al chat
+//muestra un cartel para todos de que se unio una persona,
+//menos para aquella persona que se unio
 socket.on('server-autentication', data => {
     Swal.fire({
         toast: true,

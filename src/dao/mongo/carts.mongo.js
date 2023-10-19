@@ -55,6 +55,7 @@ class CartsMongoDao {
                 });
                 await userModel.findByIdAndUpdate(userOwner._id, { cart: result })
             }
+            await productsModel.findByIdAndUpdate(pid, { $inc: { stock: -1 } })
         }
     }
 

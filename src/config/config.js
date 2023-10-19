@@ -8,7 +8,6 @@ const {
     API_VERSION,
     NODE_ENV,
     PORT,
-    ORIGIN,
     DB_CNN,
     DB_HOST,
     DB_PORT,

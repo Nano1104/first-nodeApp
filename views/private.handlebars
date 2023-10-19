@@ -1,5 +1,37 @@
-<h1>PERFIL</h1>
+{{!-- <h1>PERFIL</h1>
 
 <h2>Usuario: {{user}}</h2>
 
-<h2>Edad: {{edad}}</h2>
+<h2>Edad: {{edad}}</h2> --}}
+
+
+{{#if user}}
+    <div class="container">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+        <div id="user-profile" class="text-center d-flex flex-column m-4">
+            <div>
+                <h3>Usuario: {{user.first_name}} {{user.last_name}}</h3>
+            </div>
+            <div>
+                <strong>Edad: </strong><span>{{user.age}}</span>
+            </div>
+            <div>
+                <strong>Email: </strong><i>{{user.email}}</i>
+            </div>
+            <div>
+                 <strong>Telefono: </strong><span>{{user.phone}}</span>
+            </div>
+            <div>
+                <strong>Rol: </strong><span>{{user.role}}</span>
+            </div>
+            <span>CART: {{cartId}}</span>
+            <form action="/api/session/logout" method="get">
+                <input type="submit" value="CERRAR SESION" class="btn btn-warning">
+            </form>
+            <a href="/api/views/products" class="btn btn-success">VER CATALOGO DE PRODUCTOS</a>
+        </div>
+        </div>
+    </div>
+    </div>
+{{/if}}

@@ -8,10 +8,20 @@ paths:
       security:
         - JWTTokenCookie: []
       responses:
-          "200":
-            description: "Success. The page or view will be displayed."
-          "400":
-            description: "Error showing user"
+        "200":
+          description: "Success. The page or view will be displayed."
+        "400":
+          description: "Error showing user"
+  /api/users/premium/{uid}:
+    get:
+      summary: Cambia el rol del usuario de "user" a "premium" o viceversa
+      tags:
+        - Usuarios
+      responses:
+        "200":
+            description: "User change role"
+        "400":
+          description: "Error changing premium role"
 
 
 components:

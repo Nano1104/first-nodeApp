@@ -223,7 +223,7 @@ paths:
   /api/carts/{cid}/purchase:
     post:
       summary: Finaliza la compra de los productos que contenga el carrito con el cid
-      description: Para finalizar con la compra del carrito, el usuario debe estar logueado y cumplir con el role de "user" ademas de tener un JWT valido.
+      description: Para finalizar con la compra del carrito, el usuario debe cumplir el rol de "user" y tener un JWT valido una vez logueado
       tags:
         - Carritos
       security:
@@ -236,6 +236,14 @@ paths:
       responses:
         "200":
           description: "Product updated successfully in cart"
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Purchase finished successfully
         "400":
           description: "Error updating product quantity in cart"
       

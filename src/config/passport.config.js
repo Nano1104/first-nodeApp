@@ -1,7 +1,6 @@
 const passport = require('passport');
-///LOCAL
-const local = require('passport-local');
-const LocalStrategy = local.Strategy; 
+/* const local = require('passport-local');
+const LocalStrategy = local.Strategy;  */
 ///JWT
 const jwt = require("passport-jwt");
 const JWTStrategy = jwt.Strategy;
@@ -10,10 +9,11 @@ const { cookieExtractor } = require("../utils/jwt.js");
 const { KEY_TOKEN } = require("./config.js");
 ///GITHUB
 const GitHubStrategy = require('passport-github2');
+const { CLIENT_ID, CLIENT_SECRET } = require('./config.js');    // importamos la varibales de entorno para github
 const userModel = require("../models/userModel.js");
 
-const { CLIENT_ID, CLIENT_SECRET } = require('./config.js');    // importamos la varibales de entorno para github
-const ROLES = ["public", "user", "admin", "developer"]
+
+const ROLES = ["user", "admin", "premium"]
 
 const initializePassport = () => {
     ////////////////////////////////////// GITHUB STRATEGY
@@ -48,7 +48,6 @@ const initializePassport = () => {
 
     ////////////////////////////////////// JWT STRATEGY
     passport.use('jwt', new JWTStrategy({
-            /* jwtFromRequest: ExtractJWT.fromAuthHeaderAsBearerToken(), */
             jwtFromRequest: ExtractJWT.fromExtractors([cookieExtractor]),
             secretOrKey: KEY_TOKEN
         },

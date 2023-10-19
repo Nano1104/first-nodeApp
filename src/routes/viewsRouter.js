@@ -21,7 +21,7 @@ class ViewsRouter {
         this.router.get(`${this.path}/carts/:cid`, this.viewsController.renderCart);
 
         //////////////////////////////// WEBSOCKETS VIEWS
-        this.router.get(`${this.path}/chat`, authRole('user'), this.viewsController.renderChat)
+        this.router.get(`${this.path}/chat`, this.viewsController.renderChat)
 
         this.router.get(`${this.path}/realtimeproducts`, this.viewsController.renderRealTimeProducts)
 
@@ -30,7 +30,7 @@ class ViewsRouter {
 
         this.router.get(`${this.path}/register`, this.viewsController.renderRegister)
 
-        this.router.get(`${this.path}/private`, this.viewsController.renderPrivate)
+        this.router.get(`${this.path}/private`, passportCall('jwt'), this.viewsController.renderPrivate)
     }
 }
 

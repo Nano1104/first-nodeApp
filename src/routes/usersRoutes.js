@@ -16,9 +16,6 @@ class UsersRouter {
     }
 
     initProdsRoutes() {
-        //////////////////////////////// GET USER BY ID
-        /* this.router.get(`${this.path}/:uid`, this.userController.getUserById); */
-
         //////////////////////////////// CURRENT
         this.router.get(`${this.path}/current`, passportCall('jwt'), this.userController.showCurrentUser); 
 
@@ -29,7 +26,7 @@ class UsersRouter {
         this.router.post(`${this.path}/:uid/documents`, this.userController.postDocument)
 
         //////////////////////////////// PRIVATE
-        this.router.get(`${this.path}/private`);
+        this.router.get(`${this.path}/private`, passportCall('jwt'), this.userController.showPrivateUser);
     }
 }
 

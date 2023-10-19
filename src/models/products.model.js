@@ -30,6 +30,10 @@ const productsSchema = new mongoose.Schema({
         enum: ["SHIRT", "PANT", "SNEAKER", "HAT", "SHORT", "HOODIE", "JACKET"],
         required: true
     },
+    owner: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "user"
+    },
     thumbnail: {
         type: Array,
         default: []

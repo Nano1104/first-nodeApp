@@ -11,7 +11,7 @@ html {
 }
 
 body {
-    background-color: #ddd;
+    background-color: #282828;
     position: relative;
 }
 
@@ -37,6 +37,8 @@ a {
 #title {
     top: 0;
     right: 500px;
+    color: white;
+    text-shadow: 0px 0px 3px black;
 }
 
 .log-container {

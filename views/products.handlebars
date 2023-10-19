@@ -1,58 +1,25 @@
-
-
-{{#if this.currentUser}}
-    <div class="container">
-    <div class="row justify-content-center">
-        <div class="col-md-6">
-        <div id="user-profile" class="text-center d-flex flex-column m-4">
-            <div>
-                <h3>Usuario: {{this.currentUser.first_name}} {{this.currentUser.last_name}}</h3>
-            </div>
-            <div>
-                <strong>Edad: </strong><span>{{this.currentUser.age}}</span>
-            </div>
-            <div>
-                <strong>Email: </strong><i>{{this.currentUser.email}}</i>
-            </div>
-            <div>
-                 <strong>Telefono: </strong><span>{{this.currentUser.phone}}</span>
-            </div>
-            <div>
-                <strong>Rol: </strong><span>{{this.currentUser.role}}</span>
-            </div>
-            <form action="/api/session/logout" method="get">
-            <input type="submit" value="CERRAR SESION" class="btn btn-warning">
-            </form>
-        </div>
-        </div>
-    </div>
-    </div>
-{{/if}}
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <ul class="navbar-nav">
+        <li class="nav-item">
+            <a class="nav-link" href="#">
+                <i class="fas fa-shopping-cart" id="cart" data={{cart}}></i>
+            </a>
+        </li>
+    </ul>
+</nav>
 
 <div id="prods-container">
-    {{#if products}}
-        {{#each products}}
-            <div id="prod-container" class="m-3 text-center border d-inline-block p-5">
-                <h2>{{this.title}}</h2>
-                <p>{{this.description}}</p>
-                <p>Precio: {{this.price}}</p>
-                <p>Categoría: {{this.category}}</p>
-                <form action="">
-                    <button type="submit" class="btn btn-primary" value={{this._id}}>AGREGAR A CARRITO</button>
-                </form>
-            </div>
-        {{/each}}
-    {{else}}
-        <h3>Sorry, the Cart Products it's empty</h3>
-    {{/if}}
+    
 </div>
 
-<script src="/socket.io/socket.io.js"></script>
-<script src="/js/realTimeProds.js"></script>
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+
+{{!---------------------- //SCRIPTS ----------------------}}
 <script>
-    $('.btn').click((e) => console.log(e.target.value))
+    const cartElement = document.getElementById('cart');
+    const cartId = cartElement.getAttribute('data'); 
 </script>
+<script src="/socket.io/socket.io.js"></script>
+<script src="/js/realTimeProds.js"></script> 
 
 
 

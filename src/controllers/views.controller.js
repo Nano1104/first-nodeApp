@@ -1,4 +1,3 @@
-
 const { ProductsServiceDao, CartsServiceDao } = require('../services/index.js');;
 
 class ViewsController {
@@ -10,8 +9,8 @@ class ViewsController {
     renderProducts = async(req, res) => {
         try {
             const products = await this.productsService.getProducts();
-            const currentUser = req.user.user  //manda la data del user Logueado
-            res.render("products", {currentUser, products});
+            const cart = req.user.user.cart  //manda el cart del user logueado
+            res.render("products", { products, cart });
         } catch (err) {
             res.status(500).json({message: "Error rendering products"})
         }
@@ -36,18 +35,24 @@ class ViewsController {
 
     renderPrivate = async(req, res) => {
         try {
-            const data = {
+            /* const data = {
                 user: req.session.user.first_name || "mariano",
                 edad: req.session.user.age || 19
             }
-            res.render("private", data);
+            res.render("private", data); */
+            const user = req.user.user
+            res.render("private", {user})
         } catch (err) {
             res.json(500).json({message: "Error rendering private user"})
         }
     }
 
     renderLogin = async(req, res) => {
-        res.render("login");
+        if(!req.cookies.userToken) {        //en caso de que ya exista un token, redirige a la vista principal
+            res.render("login");
+        } else {
+            res.redirect("/api/views/private")
+        }
     }
 
     renderRegister = async(req, res) => {

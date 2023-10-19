@@ -8,3 +8,7 @@ http: GET en /favicon.ico - 20:46:34
 http: GET en /api/views/register - 17:22:02
 http: GET en /favicon.ico - 17:22:02
 http: POST en /api/session/register - 17:22:16
+http: POST en /api/products - 17:51:54
+http: GET en /api/views/register - 20:56:36
+http: GET en /favicon.ico - 20:56:36
+http: POST en /api/session/register - 20:57:06

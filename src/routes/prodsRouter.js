@@ -21,8 +21,8 @@ class ProdsRouter {
         //////////////////////////////// GET BY ID
         this.router.get(`${this.path}/:pid`, this.prodsController.getProductById)
 
-        //////////////////////////////// ADD PRODUCT
-        this.router.post(`${this.path}`, [passportCall('jwt'), authRole('user')], this.prodsController.createProduct) 
+        //////////////////////////////// CREATE PRODUCT
+        this.router.post(`${this.path}`, passportCall('jwt'), this.prodsController.createProduct) 
 
         //////////////////////////////// UPDATE PRODUCT
         this.router.put(`${this.path}/:pid`, [passportCall('jwt'), authRole('admin')], this.prodsController.updateProduct)

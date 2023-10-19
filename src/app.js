@@ -36,8 +36,8 @@ class App {
 
     constructor(routes) {
         this.app = express();
-        this.env = NODE_ENV || "development";
-        this.port = PORT || 5000;
+        this.env = NODE_ENV;
+        this.port = PORT;
         
         this.initMiddlewares();
         this.initRoutes(routes);
@@ -81,14 +81,13 @@ class App {
                 console.log(`======== PERSISTENCE: ${PERSISTENCE} =======`);
             })
         )
-
+        this.app.set('socketio', io);
         io.on('connection', socket => {
-            console.log('New user connected')
 
-            socket.on('new-user', async user => {          //cuando entra un nuevo user, envia un mensaje al resto menos al actual y renderiza los mensajes de ld db en todos
+            socket.on('new-user', async user => {          //cuando entra un nuevo user, y renderiza los mensajes de la db en todos
                 const messages = await this.messManager.getMessages()
                 socket.emit('server-messages', messages)
-                socket.broadcast.emit('server-autentication', user)
+                socket.broadcast.emit('server-autentication', user)     //envia un mensaje al resto menos al actual
             })
 
             socket.on('message', async message => {         //envia el mensaje a la base de datos

@@ -39,7 +39,7 @@ const userSchema = new mongoose.Schema({
     ],
     role: {
         type: String,
-        enum: ["user", "admin", "developer"],
+        enum: ["user", "admin", "premium"],
         required: true
     },
     last_connection: {
@@ -48,9 +48,6 @@ const userSchema = new mongoose.Schema({
     }
 })
 
-/* userSchema.pre('find', () => {
-
-}) */
 
 const userModel = mongoose.model(userCollection, userSchema)
 module.exports = userModel

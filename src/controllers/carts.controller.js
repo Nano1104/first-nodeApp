@@ -1,4 +1,5 @@
 const { CartsServiceDao } = require("../services/index.js");
+const { NODE_ENV } = require("../config/config.js");
 
 class CartsController {
     cartsService;
@@ -18,7 +19,12 @@ class CartsController {
     getCartProducts = async (req, res) => {
         try {
             let cartProds = await this.cartsService.getCartProducts(req.params.cid)
-            res.status(200).json({message: `Success getting products from cart: ${req.params.cid}`, cartProds: cartProds})
+            /* if(NODE_ENV == "development") {
+                res.status(200).json({message: `Success getting products from cart: ${req.params.cid}`, cartProds: cartProds})
+            } else {
+                res.redirect(`/api/views/carts/${req.params.cid}`)
+            } */
+            res.redirect(`/api/views/carts/${req.params.cid}`)
         } catch (err) {
             res.status(400).json({message: `Error getting products from cart: ${req.params.cid}`, err: err})
         }
