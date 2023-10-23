@@ -13,8 +13,10 @@ class SessionController {
             const currentUserId = req.user.user._id
             await userModel.findByIdAndUpdate(currentUserId, { last_connection: new Date() })
             res.clearCookie('userToken')
+            req.logger.info(`User Logout - URL: ${req.url}`)
             res.redirect('/api/views/login')
         } catch (err) {
+            req.logger.error(`Error login out - URL: ${req.url}`)
             res.status(400).json({ message: "Error logout", error: err })
         }
     }
@@ -36,9 +38,11 @@ class SessionController {
             if(NODE_ENV == "production") {
                 res.redirect("/api/views/products")
             } else {
+                req.logger.info(`User registered - URL: ${req.url}`)
                 res.status(200).json({message: "User login successfully with Token", token: token})
             }
         } catch (err) {
+            req.logger.error(`Error login user - URL: ${req.url}`)
             res.status(500).json({ message: "Error login User", error: err });
         }
     }
@@ -70,6 +74,7 @@ class SessionController {
             if(NODE_ENV == "production") {
                 res.render("login")
             } else {
+                req.logger.info(`User registered - URL: ${req.url}`)
                 res.status(200).json({ message: "Successful register", user })
             }
         } catch (err) {
@@ -77,6 +82,7 @@ class SessionController {
                 res.render('failregister')
             } else {
                 res.status(500).json({ message: "Registration failed", error: err });
+                req.logger.error(`Error registering user - URL: ${req.url}`)
             }
         }
     }
