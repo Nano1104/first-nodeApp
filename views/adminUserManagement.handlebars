@@ -1,0 +1,67 @@
+{{#if usersDTOwithNotAdmin}}
+    <table class="table container mt-5">
+        <thead>
+            <tr>
+                <th scope="col">#</th>
+                <th scope="col">Usuario</th>
+                <th scope="col">Edad</th>
+                <th scope="col">Rol</th>
+            </tr>
+        </thead>
+        <tbody>
+    {{#each usersDTOwithNotAdmin}}
+        <tr id="tr-{{this.id}}" data="{{this.id}}">
+            <th></th>
+            <td>{{this.fullName}}</td>
+            <td>{{this.age}}</td>
+            <td>{{this.role}}</td>
+            <td><button class="btn-change btn btn-primary" value="{{this.id}}">CAMBIAR ROL</button></td>
+            <td><button class="btn-delete btn btn-warning" value="{{this.id}}">ELIMINAR</button></td>
+        </tr>
+    {{/each}}
+        </tbody>
+    </table>
+{{else}}
+    <h3>There's no users registered</h3>
+{{/if}}
+<div class="text-center mt-3">
+    <a href="/api/users/current" class="btn btn-primary">VOLVER</a>
+</div>
+
+
+<script>
+    $(`.btn-change`).click((e) => {         //CAMBIA EL ROL DEL USUARIO
+        Swal.fire({
+            title: 'Realizar el cambio de rol',
+            showCancelButton: true,
+            confirmButtonText: 'SI',
+          })
+          .then((result) => {
+            if(result.isConfirmed) {
+                fetch(`/api/users/premium/${e.target.value}`, {
+                    method: "GET"
+                })
+                .catch((err) => console.log(err))
+                location.reload();
+            }
+          })
+    })
+
+    $(`.btn-delete`).click((e) => {         //ELIMINA EL USUARIO
+        Swal.fire({
+            title: 'Estas seguro de eliminar este usuario?',
+            showCancelButton: true,
+            confirmButtonText: 'SI',
+          })
+          .then((result) => {
+             if(result.isConfirmed) {
+                fetch(`/api/users/${e.target.value}`, {
+                    method: "DELETE"
+                })
+                .catch((err) => console.log(err))
+                location.reload();
+             }
+          })
+    })
+</script>
+<script src="/js/adminUserManagement.js"></script>

@@ -9,8 +9,14 @@ const cartsModel = require("../models/carts.model.js");
 class SessionController {
     ////////////////////////////////////// LOGOUT
     sessionLogout = async (req, res) => {
-        res.clearCookie('userToken')
-        res.redirect('/api/views/login')
+        try {
+            const currentUserId = req.user.user._id
+            await userModel.findByIdAndUpdate(currentUserId, { last_connection: new Date() })
+            res.clearCookie('userToken')
+            res.redirect('/api/views/login')
+        } catch (err) {
+            res.status(400).json({ message: "Error logout", error: err })
+        }
     }
 
     ////////////////////////////////////// LOGIN
@@ -22,16 +28,16 @@ class SessionController {
             if(!findUser) return res.status(404).json({message: "User not found"})    //valida si el user ya existe    
             if(!isValidPassword(password, findUser)) return res.status(401).json({message: "password incorrect"})        //o si la contraseña es incorrecta     
             
-            await userModel.findByIdAndUpdate(findUser._id, { last_connection: new Date() })
+            await userModel.findByIdAndUpdate(findUser._id, { last_connection: new Date() })    //cada vez que el user inicie session se le actualiza su prop
             const token = generateToken(findUser)
             res.cookie('userToken', token, { httpOnly: true });
-            req.user = findUser
-            /* if(NODE_ENV == "development") {
-                res.status(200).json({message: "User login successfully with Token", token: token})
-            } else {
+            req.user = findUser                                 //pase el user logueado por el objeto req
+
+            if(NODE_ENV == "production") {
                 res.redirect("/api/views/products")
-            } */
-            res.redirect("/api/users/current")
+            } else {
+                res.status(200).json({message: "User login successfully with Token", token: token})
+            }
         } catch (err) {
             res.status(500).json({ message: "Error login User", error: err });
         }
@@ -51,7 +57,7 @@ class SessionController {
 
             if(!role) userToAdd.role = "user"
             // si cumple con los campos se le asigna el role de admin
-            if(email == "adminCoder@hotmail.com" && password == '12345') userToAdd.role = "admin" 
+            if(email == "appadmin@hotmail.com" && password == '12345') userToAdd.role = "admin" 
             
             const newCart = { //se crea el cart que tendra asociado el user
                 products: []
@@ -61,17 +67,16 @@ class SessionController {
             
             const user = await userModel.create({ ...userToAdd })
             
-            /* if(NODE_ENV == "development") {
-                res.status(200).json({ message: "Successful register", user })
-            } else {
+            if(NODE_ENV == "production") {
                 res.render("login")
-            } */
-            res.render("login")
-        } catch (err) {
-            if(NODE_ENV == "development") {
-                res.status(500).json({ message: "Registration failed", error: err });
             } else {
+                res.status(200).json({ message: "Successful register", user })
+            }
+        } catch (err) {
+            if(NODE_ENV == "production") {
                 res.render('failregister')
+            } else {
+                res.status(500).json({ message: "Registration failed", error: err });
             }
         }
     }

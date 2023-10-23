@@ -11,7 +11,7 @@ const passportCall = strategy => {
                 }
                 res.status(401).send({err: info.message ? info.message : info.toString()})
             } 
-
+            
             req.user = user;
             next()
         })(req, res, next)

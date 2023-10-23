@@ -9,7 +9,7 @@ paths:
         - JWTTokenCookie: []
       responses:
         "200":
-          description: "Exito. La vista se renderizara para mostrar la informacion del usuario"
+          description: "Exito. Entrega la vista del usuario actual"
         "400":
           description: "Mensaje de error al intentar mostrar la vista con los datos del usuario"
   /api/users/premium/{uid}:

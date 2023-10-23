@@ -1,28 +1,31 @@
 const winston = require("winston")
 const { NODE_ENV } = require("../config/config.js")
 
-const customLevels = {
-    debug: 0,
-    http: 1,
-    info: 2,
-    warning: 3,
-    error: 4,
-    fatal: 5
-}
-
 ////// DEVELOPMENT LOGGER
 const devLogger = winston.createLogger({
-    levels: customLevels, 
+    levels: winston.config.npm.levels, 
     level: "debug",
-    format: winston.format.simple(),
+    format: winston.format.combine(
+        winston.format.colorize(),
+        winston.format.timestamp(),
+        winston.format.printf(({ timestamp, level, message }) => {
+          return `${timestamp} [${level}]: ${message}`;
+        })
+    ),
     transports: [new winston.transports.Console()]
 });
 
 ////// PRODUCTION LOGGER
 const prodLogger = winston.createLogger({
-    levels: customLevels,
-    format: winston.format.simple(),
-    transports: [new winston.transports.File({ filename: './errors.log', level: 'error' })]
+    levels: winston.config.npm.levels,
+    format: winston.format.combine(
+        winston.format.timestamp(),
+        winston.format.json()
+    ),
+    transports: [
+        new winston.transports.File({ filename: 'error.log', level: 'error' }),
+        new winston.transports.File({ filename: 'combined.log' })
+      ]
 });
 
 const loggerLevels = {
@@ -30,7 +33,7 @@ const loggerLevels = {
     development: devLogger
 }
 
-const setLogger = (req, res, next) => {
+const setLogger = (req, res, next) => {     //dependiendo el entorno, setea el logger de dev o production
     req.logger = loggerLevels[`${NODE_ENV}`]
     req.logger.http(`${req.method} en ${req.url} - ${new Date().toLocaleTimeString()}`)
     next()

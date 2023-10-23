@@ -1,0 +1,44 @@
+<div class="container">
+  <div class="row">
+    <div class="col-12 d-flex justify-content-center align-items-center text-center" style="height: 100vh;">
+      <div id="cartProds-container">
+        {{#if products}}
+          {{#each products}}
+            <div class="prod-container border p-3 m-3">
+              <h2><strong>{{this.title}}</strong></h2>
+              <p>{{this.description}}</p>
+              <p>Precio: {{this.price}}</p>
+              <p><i>Stock: {{this.stock}}</i></p>
+              <p>Categoría: {{this.category}}</p>
+              <button class="btn btn-warning btn-delete" value="{{this._id}}">ELIMINAR PRODUCTO</button>
+            </div>
+          {{/each}}
+        </div>
+      {{else}}
+        <h3>Does not exists products</h3>
+        <a href="/api/users/current" class="btn btn-primary">VOLVER</a>
+      {{/if}}
+    </div>
+  </div>
+</div>
+
+<script>
+
+    $('.btn-delete').click((e) => {
+        Swal.fire({
+            title: 'Estas seguro de eliminar este producto?',
+            showCancelButton: true,
+            confirmButtonText: 'SI',
+          })
+          .then((result) => {
+            if(result.isConfirmed) {
+                fetch(`/api/products/${e.target.value}`, {
+                    method: "DELETE"
+                })
+                .catch((err) => console.log(err))
+                location.reload();
+            }
+          })
+    })
+
+</script>

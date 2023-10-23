@@ -1,4 +1,6 @@
-const { ProductsServiceDao, CartsServiceDao } = require('../services/index.js');;
+const { ProductsServiceDao, CartsServiceDao } = require('../services/index.js');
+const userModel = require("../models/userModel.js");
+const UserDto = require("../dto/user.dto.js");
 
 class ViewsController {
     constructor() {
@@ -26,12 +28,17 @@ class ViewsController {
         }
     }
 
-    renderChat = async(req, res) => {
-        res.render("chat");
+    renderDeleteProducts = async (req, res) => {
+        try {
+            const products = await this.productsService.getProducts();
+            res.render("deleteProducts", { products })
+        } catch (err) {
+            res.status(500).json({message: `Error rendering deleting products view`})
+        }
     }
 
-    renderRealTimeProducts = async(req, res) => {
-        res.render("realTimeProducts");
+    renderChat = async(req, res) => {
+        res.render("chat");
     }
 
     renderPrivate = async(req, res) => {
@@ -58,6 +65,13 @@ class ViewsController {
 
     renderRegister = async(req, res) => {
         res.render("register");
+    }
+
+    renderAdminManagement = async(req, res) => {
+        const users = await userModel.find({}).lean()
+        const usersDTO = users.map(user => new UserDto(user))
+        const usersDTOwithNotAdmin = usersDTO.filter(user => user.role !== 'admin')   //envia todos los users pasados por el DTO pero sin aquellos que sean admin
+        res.render("adminUserManagement", {usersDTOwithNotAdmin})
     }
 }
 

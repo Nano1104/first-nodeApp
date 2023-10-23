@@ -1,0 +1,20 @@
+=
+{{#if users}}
+    {{#each users}}
+        <div class="col-md-6">
+            <div class="card m-3 text-center" style="margin-bottom: 10px;">
+                <div class="card-body">
+                    <h3 class="card-title">{{this.first_name}} {{this.last_name}}</h3>
+                    <p class="card-text">
+                        <strong>Edad: </strong>{{this.age}}<br>
+                        <strong>Email: </strong>{{this.email}}<br>
+                        <strong>Telefono: </strong>{{this.phone}}<br>
+                        <strong>Rol: </strong>{{this.role}}
+                    </p>
+                </div>
+            </div>
+        </div>
+    {{/each}}
+{{else}}
+    <h3>There's no users registered</h3>
+{{/if}}

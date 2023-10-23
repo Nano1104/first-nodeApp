@@ -102,7 +102,7 @@ if(NODE_ENV == "development") {                      //Si el entorno no es de de
                 const { _body: adminRegisterBody } = await requester.post(`${SESSION_URL}/register`).send(testAdmin)
                 expect(adminRegisterBody.message).to.be.eq("Successful register")
                 expect(adminRegisterBody.user).to.have.property("email")
-                expect(adminRegisterBody.user.email).to.be.eq("adminCoder@hotmail.com")
+                expect(adminRegisterBody.user.email).to.be.eq("appadmin@hotmail.com")
     
                 const adminLogin = {
                     email: adminRegisterBody.user.email,
@@ -128,23 +128,27 @@ if(NODE_ENV == "development") {                      //Si el entorno no es de de
                 await userModel.deleteMany({})
             })
     
-            it('POST api/:cid/products/:pid should post a ceartain product in a certain cart with status 200', async () => {
+            it.only('POST api/:cid/products/:pid should post a ceartain product in a certain cart with status 200', async () => {
                 //# 1~ creamos un cart de prueba y accedemos a su _id 
-                const { _body: cartCreatedBody } = await requester.post(`${CARTS_URL}`)
+                /* const { _body: cartCreatedBody } = await requester.post(`${CARTS_URL}`)
                 expect(cartCreatedBody.newCart).to.have.property("_id")
                 expect(cartCreatedBody.message).to.be.eq("Cart created successfully")
                 const cartId = cartCreatedBody.newCart._id
+                console.log(cartId) */
     
                 //# 2~ registramos e iniciamos session con un user para agregar un prod a la db
                 //register
                 const { _body: bodyRegister } = await requester.post(`${SESSION_URL}/register`).send(testUser)
+                expect(bodyRegister).to.have.property("user")
+                expect(bodyRegister.user).to.have.property("cart")
+                const cartUserId = bodyRegister.user.cart._id
+
                 //login
                 const userLogin = {
                     email: bodyRegister.user.email,
                     password: testUser.password
                 }
                 const { _body: bodyLogin } = await requester.post(`${SESSION_URL}/login`).send(userLogin)
-    
                 const { _body: prodAddedBody } = await requester.post(`${PRODS_URL}`)
                                                                         .set('Cookie', `userToken=${bodyLogin.token}`)
                                                                         .send(testProd);
@@ -153,7 +157,8 @@ if(NODE_ENV == "development") {                      //Si el entorno no es de de
                 const prodId = prodAddedBody.result._id
     
                 //# 3~ agregamos el prod creado al carrito
-                const { _body: cartModified } = await requester.post(`${CARTS_URL}/${cartId}/products/${prodId}`)
+                const { _body: cartModified } = await requester.post(`${CARTS_URL}/${cartUserId}/products/${prodId}`)
+                console.log(cartModified)
                 expect(cartModified).to.be.ok
                 expect(cartModified.cart).to.have.property("_id")
                 expect(cartModified.cart.products).to.be.an("array")
@@ -200,9 +205,8 @@ if(NODE_ENV == "development") {                      //Si el entorno no es de de
                 expect(bodyRegister).to.be.ok
                 //# 2~ hacemos nuevamente un register que tenga el mismo email
                 const { statusCode, _body: bodyRegister2 } = await requester.post(`${SESSION_URL}/register`).send(testUser)
-                expect(statusCode).to.be.eq(500)
-                expect(bodyRegister2.message).to.be.eq("Registration failed")
-                expect(bodyRegister2.error).to.be.ok
+                expect(statusCode).to.be.eq(409)
+                expect(bodyRegister2.message).to.be.eq("User already exists")
             })
     
             it('POST api/session/login should not login user with different password status 500', async () => {

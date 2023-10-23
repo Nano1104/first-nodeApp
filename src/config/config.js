@@ -1,7 +1,7 @@
 const { config } = require('dotenv');
 
 config({
-    path: `.env.${process.env.NODE_ENV || "development"}`
+    path: `.env.${process.env.NODE_ENV}`
 })
 
 const {
@@ -17,7 +17,9 @@ const {
     CLIENT_ID,
     CLIENT_SECRET,
     KEY_TOKEN,
-    PERSISTENCE
+    PERSISTENCE,
+    EMAIL,
+    PSW_EMAIL
 } = process.env
 
 module.exports = {
@@ -33,5 +35,7 @@ module.exports = {
     CLIENT_ID,
     CLIENT_SECRET,
     KEY_TOKEN,
-    PERSISTENCE
+    PERSISTENCE,
+    EMAIL,
+    PSW_EMAIL
 }

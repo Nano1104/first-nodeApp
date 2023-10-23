@@ -15,13 +15,14 @@ const testUser = {
     email: "mariannfer04@gmail.com",
     phone: 1128483938,
     password: '123',
+    role: "user"
 }
 
 const testAdmin = {
     first_name: "pablo",
     last_name: "fernandez",
     age: 35,
-    email: "adminCoder@hotmail.com",
+    email: "appadmin@hotmail.com",
     phone: 1130281929,
     password: '12345',
 }

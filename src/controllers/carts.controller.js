@@ -19,12 +19,11 @@ class CartsController {
     getCartProducts = async (req, res) => {
         try {
             let cartProds = await this.cartsService.getCartProducts(req.params.cid)
-            /* if(NODE_ENV == "development") {
+            if(!NODE_ENV == "production") {
                 res.status(200).json({message: `Success getting products from cart: ${req.params.cid}`, cartProds: cartProds})
             } else {
                 res.redirect(`/api/views/carts/${req.params.cid}`)
-            } */
-            res.redirect(`/api/views/carts/${req.params.cid}`)
+            }
         } catch (err) {
             res.status(400).json({message: `Error getting products from cart: ${req.params.cid}`, err: err})
         }

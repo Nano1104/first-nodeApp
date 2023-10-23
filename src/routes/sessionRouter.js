@@ -1,7 +1,6 @@
 const { Router } = require("express");
 const passport = require('passport');
-
-const { authToken } = require("../middleware/auth_token.js");
+const { passportCall } = require("../utils/passportcall.js");
 const SessionController = require("../controllers/session.controller.js");
 
 class SessionRouter {
@@ -15,7 +14,7 @@ class SessionRouter {
 
     initProdsRoutes() {
         //////////////////////////////// SESSION-LOGOUT
-        this.router.get(`${this.path}/logout`, this.sessionController.sessionLogout); 
+        this.router.get(`${this.path}/logout`, passportCall('jwt'), this.sessionController.sessionLogout); 
 
         //////////////////////////////// SESSION-LOGIN
         this.router.post(`${this.path}/login`, this.sessionController.sessionLogin); 

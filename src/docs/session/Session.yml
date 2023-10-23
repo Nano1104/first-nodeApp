@@ -1,0 +1,170 @@
+paths:
+  /api/session/logout:
+    get:
+      summary: Cierra la sesión del usuario borrando el token de las cookies
+      tags:
+        - Session
+      responses:
+        "200":
+          description: "Exito. Redirige a la vista de Login"
+        "400":
+          description: "Mensaje de error al tratar de hacer Logout"
+  /api/session/login:
+    post: 
+      summary: Loguea al usuario
+      description: Si la app este corriendo sobre entorno de desarrollo, la respuesta sera en json. Si es entorno de produccion la respuesta rederige a la vista de productos
+      tags:
+        - Session
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#components/requestBodies/Login"
+      responses:
+        "200":
+          description: "Redirige a la vista de productos o devuelve la respuesta json dependiendo del entorno"
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message: 
+                    type: string
+                    example: "User login successfully with Token"
+                  token:
+                    type: string
+                    example: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7Il9pZCI6IjY1MzFmMjFlZWQ3OWJkYzk3ZjE3YjE4NCIsImZpcnN0X25hbWUiOiJtYXJpYW5vIiwibGFzdF9uYW1lIjoiZGlnaWFjb21vIiwiYWdlIjoxOSwiZW1haWwiOiJtYXJpYW5vZGcwNEBob3RtYWlsLmNvbSIsInBob25lIjoxMTk4NzQ2NTc0LCJwYXNzd29yZCI6IiQyYiQxMCQ2SnJTMk82VktpL3h5ZXQwTzdYYXRPMDIudjE1Ty5XOW5iSVMySVk4L3hPZWguOEVxZjJOYSIsImNhcnQiOiI2NTMxZjIxZWVkNzliZGM5N2YxN2IxODIiLCJyb2xlIjoicHJlbWl1bSIsImRvY3VtZW50cyI6W10sImxhc3RfY29ubmVjdGlvbiI6IjIwMjMtMTAtMjBUMDM6MjE6MDIuMTkxWiIsIl9fdiI6MH0sImlhdCI6MTY5Nzc3MjA3MCwiZXhwIjoxNjk3Nzc1NjcwfQ.enMpDm6-1KD-Cikoi3ugOGrT1J2KQVU0rgFnvZxBhBA"
+        "400":
+          description: Mensaje de error al hacer login
+  /api/session/register:
+    post:
+      summary: Registra al usuario
+      description: En que la app este corriendo sobre entorno de desarrollo, la respuesta devolvera json. Si es entorno de produccion la respuesta renderiza la vista de Login.
+      tags: 
+        - Session
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#components/requestBodies/Register"
+      responses:
+        "200":
+          description: "Renderiza la vista de login o devuelve la respuesta json dependiendo del entorno"
+          content:
+            application/json:
+              schema:
+                type: object
+                $ref: "#components/schemas/UserRegistered"
+        "400":
+          description: Mensaje de error al registrar al usuario
+  /api/session/faillogin:
+    get:
+      summary: Renderiza la vista de faillogin
+      description: En caso de que la vista de Login falle se mostrara
+      tags:
+        - Session
+      responses:
+        "200":
+          description: "Renderiza la vista de faillogin"
+  /api/session/failregister:
+    get:
+      summary: Renderiza la vista de failregister
+      description: En caso de que la vista de Register falle se mostrara
+      tags:
+        - Session
+      responses:
+        "200":
+          description: "Renderiza la vista de failregister"
+  
+
+
+
+
+
+components:
+  schemas:
+    UserRegistered:
+      type: object
+      properties:
+        first_name:
+          type: string
+          description: Nombre del usuario
+          example: Bruno
+        last_name: 
+          type: string
+          description: Apellido del usuario
+          example: Acevedo
+        age:
+          type: number
+          description: Edad del usuario
+          example: 22
+        email:
+          type: string
+          description: Email del usuario
+          example: brunoacevedo04@hotmail.com
+        phone:
+          type: number
+          description: Numero de celular del usuario
+          example: 1103940321
+        password:
+          type: string
+          description: Contraseña del usuario
+          example: "$2b$10$DVIMRMehJtNwD6.4TsEAjuBUFVremOYah3.xuC08TxgZfASVVy/hy"
+        cart:
+          type: object
+          properties:
+            products:
+              type: array
+              example: []
+            _id:
+              type: ObjectId
+              example: "6531f21eed79bdc97f17b182"
+        role:
+          type: string
+          description: Rol que tenga el usuario
+          enum: ["user", "admin", "premium"]
+          example: "premium"
+        _id:
+          type: ObjectId
+          example: "6531f21eed79bdc97f17b184" 
+        last_connection:
+          type: string
+          format: date
+          example: "2023-10-19T19:43:44.488+00:00"
+  requestBodies:
+    Login:
+      type: object
+      properties:
+        email: 
+          type: string
+          example: "brunoacevedo04@hotmail.com"
+        password: 
+          type: string
+          example: "brunoace04"
+    Register:
+      type: object
+      properties:
+        first_name:
+          type: string
+          example: Bruno
+        last_name:
+          type: string
+          example: Acevedo
+        age:
+          type: number
+          example: 22
+        email:
+          type: string
+          example: "brunoacevedo04@hotmail.com"
+        phone:
+          type: number
+          example: 1103940321
+        role:
+          type: string
+          example: "premium"
+        password:
+          type: string
+          example: brunoace04
+

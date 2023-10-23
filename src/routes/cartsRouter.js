@@ -1,4 +1,3 @@
-const fs = require('fs');
 const { Router } = require("express");
 
 const { authRole } = require("../middleware/auth_role.js");
@@ -27,7 +26,7 @@ class CartsRouter {
         this.router.post(`${this.path}`, this.cartsController.creatCart)
         
         //////////////////////////////// POST PRODUCT IN CERTAIN CART
-        this.router.post(`${this.path}/:cid/products/:pid`, this.cartsController.postProductInCart)
+        this.router.post(`${this.path}/:cid/products/:pid`,  [passportCall('jwt'), authRole('user', 'premium')], this.cartsController.postProductInCart)
 
         //////////////////////////////// DELETE PRODUCT (pid) FROM CART (cid)
         this.router.delete(`${this.path}/:cid/products/:pid`, this.cartsController.deleteProductFromCart)
@@ -42,7 +41,7 @@ class CartsRouter {
         this.router.put(`${this.path}/:cid/products/:pid`, this.cartsController.updateProdQuantityInCart)
 
         //////////////////////////////// FINISH CART PURCHASE
-        this.router.post(`${this.path}/:cid/purchase`, [passportCall('jwt'), authRole('user')], this.cartsController.finishPurchase)
+        this.router.post(`${this.path}/:cid/purchase`, [passportCall('jwt'), authRole('user', 'premium')], this.cartsController.finishPurchase)
     }
 }
 

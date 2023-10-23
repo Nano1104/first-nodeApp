@@ -12,7 +12,7 @@ fetch(`/api/products`, {
                                     <p>${prod.description}</p>
                                     <p>Precio: ${prod.price}</p>
                                     <p>Categoría: ${prod.category}</p>
-                                    <p id=stock_${prod._id} data=${prod.stock}>Stock disponible: ${prod.stock}</p>
+                                    <p id=stock_${prod._id} data=${prod.stock}><i>Stock disponible: ${prod.stock}</i></p>
                                     <button class="btn btn-primary btn-add" value=${prod._id}>AGREGAR A CARRITO</button>
                                 </div>
                                 `)
@@ -50,6 +50,7 @@ $("#cart")
         window.location.href = `/api/carts/${cartId}`;
     })
     .css({fontSize: "25px"})
+$("#user-icon").css({fontSize: "25px"})
 
 
 
