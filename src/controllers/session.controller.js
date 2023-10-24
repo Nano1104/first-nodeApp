@@ -42,8 +42,12 @@ class SessionController {
                 res.status(200).json({message: "User login successfully with Token", token: token})
             }
         } catch (err) {
-            req.logger.error(`Error login user - URL: ${req.url}`)
-            res.status(500).json({ message: "Error login User", error: err });
+            if(NODE_ENV == "production") {
+                res.render('faillogin')
+            } else {
+                req.logger.error(`Error login user - URL: ${req.url}`)
+                res.status(500).json({ message: "Error login User", error: err });
+            }
         }
     }
 
@@ -81,19 +85,9 @@ class SessionController {
             if(NODE_ENV == "production") {
                 res.render('failregister')
             } else {
-                res.status(500).json({ message: "Registration failed", error: err });
                 req.logger.error(`Error registering user - URL: ${req.url}`)
+                res.status(500).json({ message: "Registration failed", error: err });
             }
-        }
-    }
-
-    ////////////////////////////////////// GITHUB
-    sessionGithub = async (req, res) => {
-        try {
-            req.session.user = req.user
-            res.redirect("/api/session/private")
-        } catch (err) {
-            res.status(500).json({message: "Error login with github", error: err})
         }
     }
 
