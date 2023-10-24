@@ -21,11 +21,6 @@ class SessionRouter {
 
         //////////////////////////////// SESSION-REGISTER
         this.router.post(`${this.path}/register`, this.sessionController.sessionRegister)
-        
-        //////////////////////////////// GITHUB
-        this.router.get(`${this.path}/github`, passport.authenticate('github', {scope: ['user:email']}), async (req, res) => {})
-
-        this.router.get(`${this.path}/github/callback`, passport.authenticate('github', {failureRedirect: `/api${this.path}/login`}), this.sessionController.sessionGithub)
 
         //////////////////////////////// FAILREGISTER
         this.router.get(`${this.path}/faillogin`, this.sessionController.renderFailLogin)
