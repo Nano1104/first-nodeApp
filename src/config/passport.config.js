@@ -1,4 +1,6 @@
 const passport = require('passport');
+/* const local = require('passport-local');
+const LocalStrategy = local.Strategy;  */
 ///JWT
 const jwt = require("passport-jwt");
 const JWTStrategy = jwt.Strategy;
@@ -13,7 +15,7 @@ const userModel = require("../models/userModel.js");
 
 const ROLES = ["user", "admin", "premium"]
 
-const initializePassport = () => {          //Estrategia por si se quiere usar github para autenticacion de terceros
+const initializePassport = () => {      //Estrategia por si se quiere usar github para autenticacion de terceros
     ////////////////////////////////////// GITHUB STRATEGY
     passport.use('github', new GitHubStrategy({
         clientID: CLIENT_ID,

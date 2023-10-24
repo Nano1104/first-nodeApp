@@ -30,9 +30,6 @@ class UsersRouter {
 
         //////////////////////////////// PREMIUM USER
         this.router.get(`${this.path}/premium/:uid`, [passportCall('jwt'), authRole('admin')], this.userController.changeRole)
-
-        //////////////////////////////// PRIVATE
-        this.router.get(`${this.path}/private`, passportCall('jwt'), this.userController.showPrivateUser);
     }
 }
 

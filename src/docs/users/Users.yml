@@ -81,10 +81,6 @@ paths:
           description: "Mensaje de que el usuario se elimino exitosamente"
         "500":
           description: "Mensaje de error al intentar eliminar el usuario"
-  
-
-
-
 
 
 components:
