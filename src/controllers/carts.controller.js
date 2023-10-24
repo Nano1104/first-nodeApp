@@ -44,7 +44,6 @@ class CartsController {
         try {
             await this.cartsService.postProductInCart(cartId, prodId)
             const cartModified = await this.cartsService.getCartById(cartId)
-            console.log("funciona")
             res.status(200).json({message: `Product added successfully in cart: ${cartId}`, cart: cartModified})
         } catch (err) {
             res.status(400).json({message: `Error posting product in cart: ${cartId}`, err: err})

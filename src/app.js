@@ -107,7 +107,7 @@ class App {
 
 
 //INCIALIZAMOS LA APP Y SUS ROUTES
-const app = new App([new ProdsRouter(), new CartsRouter(), new ViewsRouter(), new SessionRouter(), new UsersRouter()]);
+const app = new App([new ProdsRouter(), new CartsRouter(), new ViewsRouter(), new SessionRouter(), new UsersRouter(), new LoggerRouter()]);
 app.listen()
 
 

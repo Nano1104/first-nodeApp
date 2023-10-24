@@ -35,56 +35,6 @@ paths:
           description: "Mensaje de que el usuario al que se quiere cambiar el rol no se encontro"
         "400":
           description: "Mensaje de error al intentar cambiar el rol al usuario"
-  /api/users/:
-    get:
-      summary: Muestra los usuarios existentes. 
-      description: Solamente el administrador de la app puedo verlos. En caso de que la app se encuentre en entorno de PRODUCCION renderizara la vista de "users"
-      tags:
-        - Usuarios
-      security:
-        - JWTTokenCookie: []
-      responses:
-        "200":
-          description: "Mensaje de que muestra los usuarios"
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  message: 
-                    type: string
-                    example: "Success getting users"
-                  users:
-                    type: array
-                    items:
-                      $ref: "#components/schemas/User"
-        "500":
-          description: "Mensaje de error al intentar mostrar los usuarios"
-    delete:
-      summary: Elimina los usuarios inactivos
-      description: Los usuarios inactivos son aquellos que no han iniciado session en los ultimos dos dias. A cada usuario inactivo que se elimine, se le avisara via email. Se necesita un JWT y cumplir con el rol de "admin" para acceder a esta ruta.
-      tags:
-        - Usuarios
-      responses:
-        "200":
-          description: "Mensaje que se eliminaron los usuarios inactivos exitosamente"
-        "500":
-          description: "Mensaje de error al intentar eliminar los usuarios inactivos"
-  /api/users/{uid}:
-    delete:
-      summary: Elimina un usuario
-      description: Solamente el administrador de la app puede eliminar un usuario. Se necesita tener un JWT y cumplir con el rol de "admin"
-      tags:
-        - Usuarios
-      reponses:
-        "200":
-          description: "Mensaje de que el usuario se elimino exitosamente"
-        "500":
-          description: "Mensaje de error al intentar eliminar el usuario"
-  
-
-
-
 
 
 components:

@@ -1,4 +1,6 @@
 const passport = require('passport');
+/* const local = require('passport-local');
+const LocalStrategy = local.Strategy;  */
 ///JWT
 const jwt = require("passport-jwt");
 const JWTStrategy = jwt.Strategy;
@@ -13,7 +15,7 @@ const userModel = require("../models/userModel.js");
 
 const ROLES = ["user", "admin", "premium"]
 
-const initializePassport = () => {          //Estrategia por si se quiere usar github para autenticacion de terceros
+const initializePassport = () => {
     ////////////////////////////////////// GITHUB STRATEGY
     passport.use('github', new GitHubStrategy({
         clientID: CLIENT_ID,
@@ -31,7 +33,7 @@ const initializePassport = () => {          //Estrategia por si se quiere usar g
                     phone: ' ',
                     email: profile._json.email ?? ' ',
                     passport: ' ',
-                    role: "user"
+                    role: "usuario"
                 }
 
                 let result = await userModel.create(newUser)
@@ -58,6 +60,47 @@ const initializePassport = () => {          //Estrategia por si se quiere usar g
             }
         }
     ))
+
+    ////////////////////////////////////// REGISTER STRATEGY
+    /* passport.use('register', new LocalStrategy( {passReqToCallback: true, usernameField: 'email'}, async(req, email, password, done) => {
+        const { first_name, last_name, age, phone } = req.body;
+        try {
+            const user = await userModel.findOne({ email: email });
+            if (user) return done(null, false)
+    
+            const newUser = {
+                first_name,
+                last_name,
+                age,
+                email,
+                phone,
+                password: createHash(password),  
+            };
+    
+            if(email === 'adminCoder@code.com' && password === 'adminCoder3r123') {
+                newUser.role = "admin"
+            } else {
+                newUser.role = "usuario"
+            }
+    
+            let result = await userModel.create(newUser);
+            return done(null, result);              // Devuelve el nuevo usuario directamente
+        } catch (err) {
+            return done(err)
+        }
+    })) */
+
+    ////////////////////////////////////// LOGIN STRATEGY
+    /* passport.use('login', new LocalStrategy( {usernameField: 'email'}, async(username, password, done) => {
+        try {
+            const user = await userModel.findOne({email: username})
+            if(!user) return done(null, false)
+            if(!isValidPassword(user, password)) return done(null, false)
+            return done(null, user)
+        } catch (err) {
+            return done(`Error login ${err}`)
+        }
+    })) */
 
     passport.serializeUser((user, done) => {
         done(null, user._id)

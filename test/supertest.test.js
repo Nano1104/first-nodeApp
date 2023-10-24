@@ -128,8 +128,15 @@ if(NODE_ENV == "development") {                      //Si el entorno no es de de
                 await userModel.deleteMany({})
             })
     
-            it('POST api/:cid/products/:pid should post a ceartain product in a certain cart with status 200', async () => {
-                //# 1~ registramos e iniciamos session con un user para agregar un prod a la db
+            it.only('POST api/:cid/products/:pid should post a ceartain product in a certain cart with status 200', async () => {
+                //# 1~ creamos un cart de prueba y accedemos a su _id 
+                /* const { _body: cartCreatedBody } = await requester.post(`${CARTS_URL}`)
+                expect(cartCreatedBody.newCart).to.have.property("_id")
+                expect(cartCreatedBody.message).to.be.eq("Cart created successfully")
+                const cartId = cartCreatedBody.newCart._id
+                console.log(cartId) */
+    
+                //# 2~ registramos e iniciamos session con un user para agregar un prod a la db
                 //register
                 const { _body: bodyRegister } = await requester.post(`${SESSION_URL}/register`).send(testUser)
                 expect(bodyRegister).to.have.property("user")
@@ -149,9 +156,8 @@ if(NODE_ENV == "development") {                      //Si el entorno no es de de
                 expect(prodAddedBody.result).to.have.property("_id")
                 const prodId = prodAddedBody.result._id
     
-                //# 2~ agregamos el prod creado al carrito
+                //# 3~ agregamos el prod creado al carrito
                 const { _body: cartModified } = await requester.post(`${CARTS_URL}/${cartUserId}/products/${prodId}`)
-                                                                    .set('Cookie', `userToken=${bodyLogin.token}`)
                 console.log(cartModified)
                 expect(cartModified).to.be.ok
                 expect(cartModified.cart).to.have.property("_id")
@@ -227,5 +233,7 @@ if(NODE_ENV == "development") {                      //Si el entorno no es de de
     console.log(`================================================================`)
 }
 
+/* Nano1104 */
+/* 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 Amigachos04 */
 
 

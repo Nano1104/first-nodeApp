@@ -6,14 +6,14 @@ paths:
         - Productos
       responses:
         "200":
-          description: "Retorna los productos almacenados"
+          description: "Success getting all products from db"
           content: 
             application/json:
               schema:
                 type: object
                 $ref: "#components/schemas/Product"
         "400":
-          description: "Mesaje de error al intentar obtener los productos almacenados"
+          description: "Error getting all products from db"
     post:
       summary: Agrega un producto
       description: Para agregar un nuevo producto, se requiere autenticación con un token JWT válido y tener el rol de "user".
@@ -29,14 +29,14 @@ paths:
               $ref: "#components/requestBodies/prodToAdd"
       responses:
         "200":
-          description: "Retorna el producto agregado"
+          description: "Product added successfully"
           content: 
             application/json:
               schema:
                 type: object
                 $ref: "#components/schemas/Product"
         "400":
-          description: "Mensaje de error al intentar añadir un producto"
+          description: "Error creating product"
   /api/products/{pid}:
     get:
       summary: Obtiene un producto por el Id
@@ -51,14 +51,14 @@ paths:
             $type: ObjectId
       responses:
         "200":
-          description: "Retorna el producto con el Id pasado por parametro"
+          description: "Success getting product"
           content: 
             application/json:
               schema:
                 type: object
                 $ref: "#components/schemas/Product"
         "400":
-          description: "Mensaje de error al intentar conseguir el producto"
+          description: "Error getting product"
     put:
       summary: Actualiza un producto por el Id
       description: Para actualizar un producto, se requiere autenticación con un token JWT válido y tener el rol de "admin".
@@ -81,9 +81,9 @@ paths:
             $type: ObjectId
       responses:
         "200":
-          description: "Retorna el producto actualizado exitosamente"
+          description: "Product updated successfully"
         "400":
-          description: "Mensaje de error al querer actualizar el producto"
+          description: "Error updating product"
     delete:
       summary: Elimina un producto por el Id
       description: Para eliminar un producto, se requiere autenticación con un token JWT válido y tener el rol de "admin".
@@ -100,9 +100,9 @@ paths:
             $type: ObjectId
       responses:
         "200":
-          description: "Mensaje de producto eliminado exitosamente"
+          description: "Product deleted successfully"
         "400":
-          description: "Mensaje de error al intentar eliminar el producto"
+          description: "Error deleting product"
   
     
 

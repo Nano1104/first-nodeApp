@@ -29,7 +29,10 @@ class UsersRouter {
         this.router.get(`${this.path}/current`, passportCall('jwt'), this.userController.showCurrentUser); 
 
         //////////////////////////////// PREMIUM USER
-        this.router.get(`${this.path}/premium/:uid`, [passportCall('jwt'), authRole('admin')], this.userController.changeRole)
+        this.router.get(`${this.path}/premium/:uid`, this.userController.changeRole)
+
+        /* //////////////////////////////// PREMIUM USER
+        this.router.post(`${this.path}/:uid/documents`, this.userController.postDocument) */
 
         //////////////////////////////// PRIVATE
         this.router.get(`${this.path}/private`, passportCall('jwt'), this.userController.showPrivateUser);
