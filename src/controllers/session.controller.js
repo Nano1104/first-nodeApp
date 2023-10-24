@@ -35,14 +35,14 @@ class SessionController {
             res.cookie('userToken', token, { httpOnly: true });
             req.user = findUser                                 //pase el user logueado por el objeto req
 
-            if(NODE_ENV == "production") {
+            if(NODE_ENV == "production" || NODE_ENV == "preProduction") {
                 res.redirect("/api/views/products")
             } else {
                 req.logger.info(`User registered - URL: ${req.url}`)
                 res.status(200).json({message: "User login successfully with Token", token: token})
             }
         } catch (err) {
-            if(NODE_ENV == "production") {
+            if(NODE_ENV == "production" || NODE_ENV == "preProduction") {
                 res.render('faillogin')
             } else {
                 req.logger.error(`Error login user - URL: ${req.url}`)
@@ -75,14 +75,14 @@ class SessionController {
             
             const user = await userModel.create({ ...userToAdd })
             
-            if(NODE_ENV == "production") {
+            if(NODE_ENV == "production" || NODE_ENV == "preProduction") {
                 res.render("login")
             } else {
                 req.logger.info(`User registered - URL: ${req.url}`)
                 res.status(200).json({ message: "Successful register", user })
             }
         } catch (err) {
-            if(NODE_ENV == "production") {
+            if(NODE_ENV == "production" || NODE_ENV == "preProduction") {
                 res.render('failregister')
             } else {
                 req.logger.error(`Error registering user - URL: ${req.url}`)
