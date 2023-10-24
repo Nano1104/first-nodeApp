@@ -41,20 +41,6 @@ class ViewsController {
         res.render("chat");
     }
 
-    renderPrivate = async(req, res) => {
-        try {
-            /* const data = {
-                user: req.session.user.first_name || "mariano",
-                edad: req.session.user.age || 19
-            }
-            res.render("private", data); */
-            const user = req.user.user
-            res.render("private", {user})
-        } catch (err) {
-            res.json(500).json({message: "Error rendering private user"})
-        }
-    }
-
     renderLogin = async(req, res) => {
         if(!req.cookies.userToken) {        //en caso de que ya exista un token, redirige a la vista principal
             res.render("login");

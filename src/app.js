@@ -22,7 +22,6 @@ const CartsRouter = require('./routes/cartsRouter.js');
 const ViewsRouter = require('./routes/viewsRouter.js');
 const SessionRouter = require('./routes/sessionRouter.js');
 const UsersRouter = require('./routes/usersRoutes.js');
-const LoggerRouter = require("./routes/logger.routes.js");
 
 //TRAEMOS EL MANAGER DE LOS MENSAJES PARA PODER TRABAJAR CON ELLOS EN EL CHAT DE SOCKET
 const MessagesManager = require('./managers/messages.manager.js');
@@ -107,7 +106,7 @@ class App {
 
 
 //INCIALIZAMOS LA APP Y SUS ROUTES
-const app = new App([new ProdsRouter(), new CartsRouter(), new ViewsRouter(), new SessionRouter(), new UsersRouter(), new LoggerRouter()]);
+const app = new App([new ProdsRouter(), new CartsRouter(), new ViewsRouter(), new SessionRouter(), new UsersRouter()]);
 app.listen()
 
 

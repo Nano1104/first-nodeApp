@@ -13,8 +13,10 @@ class SessionController {
             const currentUserId = req.user.user._id
             await userModel.findByIdAndUpdate(currentUserId, { last_connection: new Date() })
             res.clearCookie('userToken')
+            req.logger.info(`User Logout - URL: ${req.url}`)
             res.redirect('/api/views/login')
         } catch (err) {
+            req.logger.error(`Error login out - URL: ${req.url}`)
             res.status(400).json({ message: "Error logout", error: err })
         }
     }
@@ -33,13 +35,19 @@ class SessionController {
             res.cookie('userToken', token, { httpOnly: true });
             req.user = findUser                                 //pase el user logueado por el objeto req
 
-            if(NODE_ENV == "production") {
+            if(NODE_ENV == "production" || NODE_ENV == "preProduction") {
                 res.redirect("/api/views/products")
             } else {
+                req.logger.info(`User Logout - URL: ${req.url}`)
                 res.status(200).json({message: "User login successfully with Token", token: token})
             }
         } catch (err) {
-            res.status(500).json({ message: "Error login User", error: err });
+            if(NODE_ENV == "production" || NODE_ENV == "preProduction") {
+                res.render('faillogin')
+            } else {
+                req.logger.error(`Error login user - URL: ${req.url}`)
+                res.status(500).json({ message: "Error login User", error: err });
+            }
         }
     }
 
@@ -67,27 +75,19 @@ class SessionController {
             
             const user = await userModel.create({ ...userToAdd })
             
-            if(NODE_ENV == "production") {
+            if(NODE_ENV == "production" || NODE_ENV == "preProduction") {
                 res.render("login")
             } else {
+                req.logger.info(`User registered - URL: ${req.url}`)
                 res.status(200).json({ message: "Successful register", user })
             }
         } catch (err) {
-            if(NODE_ENV == "production") {
+            if(NODE_ENV == "production" || NODE_ENV == "preProduction") {
                 res.render('failregister')
             } else {
+                req.logger.error(`Error registering user - URL: ${req.url}`)
                 res.status(500).json({ message: "Registration failed", error: err });
             }
-        }
-    }
-
-    ////////////////////////////////////// GITHUB
-    sessionGithub = async (req, res) => {
-        try {
-            req.session.user = req.user
-            res.redirect("/api/session/private")
-        } catch (err) {
-            res.status(500).json({message: "Error login with github", error: err})
         }
     }
 
@@ -97,12 +97,6 @@ class SessionController {
 
     renderFailRegister = async(req, res) => {
         res.render("failregister")
-    }
-
-    renderPrivate = async(req, res) => {
-        const decodedToken = req.user
-        const token = req.token
-        res.render("private", { token, decodedToken })
     }
 }
 
